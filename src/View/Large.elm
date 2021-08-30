@@ -141,16 +141,23 @@ viewBook model book =
                 , Font.size 14
                 , Events.onMouseDown (SetAppMode ViewBooksMode)
                 ]
-                [ E.column [ E.width (panelWidth 0 model), E.height (E.px 180) ]
-                    [ E.text book.title ]
+                [ E.column [ E.width (panelWidth 0 model), E.height (E.px 120), E.spacing 12 ]
+                    [ E.el [ Font.bold ] (E.text book.title)
+                    , E.text book.subtitle
+                    , E.text ("by " ++ book.author)
+                    , E.text ("Pages read: " ++ String.fromInt book.pagesRead)
+                    , E.text ("Pages: " ++ String.fromInt book.pages)
+                    ]
                 , E.column
                     [ E.width (panelWidth 0 model)
-                    , E.height (E.px <| appHeight model - 355)
+                    , E.height (E.px <| appHeight model - 295)
                     , E.scrollbarY
                     , Font.size 14
+                    , E.paddingEach { top = 18, bottom = 0, right = 0, left = 0 }
                     , View.Utility.elementAttribute "line-height" "1.5"
                     ]
-                    [ Markdown.toHtml [] book.notes
+                    [ E.el [ Font.bold ] (E.text "Notes")
+                    , Markdown.toHtml [] book.notes
                         |> E.html
                     ]
                 ]
@@ -168,6 +175,8 @@ footer model =
         , E.inFront (View.Popup.admin model)
         ]
         [ Button.adminPopup model
+        , Button.exportJson
+        , Button.importJson
         , messageRow model
         ]
 

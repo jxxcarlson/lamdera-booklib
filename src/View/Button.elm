@@ -5,9 +5,11 @@ module View.Button exposing
     , editItem2
     , expandCollapse
     , expandCollapseView
+    , exportJson
     , fetch
     , getUsers
     , help
+    , importJson
     , linkTemplate
     , new
     , runTask
@@ -159,6 +161,16 @@ editItem2 datum =
         []
         (Edit datum)
         "Edit"
+
+
+exportJson : Element FrontendMsg
+exportJson =
+    buttonTemplate [] ExportJson "Export"
+
+
+importJson : Element FrontendMsg
+importJson =
+    buttonTemplate [] JsonRequested "Import"
 
 
 expandCollapse datum =

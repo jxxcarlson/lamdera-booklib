@@ -10,7 +10,7 @@ import Types exposing (FrontendModel, FrontendMsg(..), ToBackend(..))
 
 exportJson : FrontendModel -> Cmd msg
 exportJson model =
-    Download.string "snippets.json" "text/json" (Codec.encodeData model.books)
+    Download.string "books.json" "text/json" (Codec.encodeData model.books)
 
 
 setupWindow : Cmd FrontendMsg
