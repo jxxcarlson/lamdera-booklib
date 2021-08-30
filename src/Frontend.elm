@@ -257,56 +257,76 @@ update msg model =
                             ( model, Cmd.none )
 
                         NewBookMode ->
-                            case model.currentBook of
-                                Nothing ->
-                                    ( model, Cmd.none )
+                            let
+                                { token, seed } =
+                                    Token.get model.randomSeed
 
-                                Just book ->
-                                    let
-                                        { token, seed } =
-                                            Token.get model.randomSeed
+                                blank =
+                                    Data.blank model.currentTime
 
-                                        newSnippet =
-                                            { book
-                                                | title = model.snippetText |> Data.fixUrls
-                                                , id = token
-                                            }
+                                newBook =
+                                    { blank
+                                        | title = model.inputTitle
+                                        , id = token
+                                        , subtitle = model.inputSubtitle
+                                        , author = model.inputAuthor
+                                        , creationDate = model.currentTime
+                                        , modificationDate = model.currentTime
+                                    }
 
-                                        newSnippets =
-                                            newSnippet :: model.books
-                                    in
-                                    ( { model
-                                        | books = newSnippets
-                                        , currentBook = Just newSnippet
-                                        , appMode = ViewBooksMode
-                                        , snippetText = newSnippet.title
-                                        , randomSeed = seed
-                                      }
-                                    , sendToBackend (SaveDatum user.username newSnippet)
-                                    )
+                                newBooks =
+                                    newBook :: model.books
+                            in
+                            ( { model
+                                | books = newBooks
+                                , currentBook = Just newBook
+                                , appMode = ViewBooksMode
+                                , randomSeed = seed
+                              }
+                            , sendToBackend (SaveDatum user.username newBook)
+                            )
 
                         EditBookMode ->
                             case model.currentBook of
                                 Nothing ->
                                     ( model, Cmd.none )
 
-                                Just snippet ->
+                                Just book ->
                                     let
-                                        newSnippet =
-                                            { snippet
-                                                | title = "NEW"
+                                        pagesRead =
+                                            case String.toInt model.inputPagesRead of
+                                                Nothing ->
+                                                    book.pagesRead
+
+                                                Just k ->
+                                                    k
+
+                                        pages =
+                                            case String.toInt model.inputPages of
+                                                Nothing ->
+                                                    book.pages
+
+                                                Just k ->
+                                                    k
+
+                                        newBook =
+                                            { book
+                                                | title = model.inputTitle
+                                                , subtitle = model.inputSubtitle
+                                                , author = model.inputAuthor
+                                                , pagesRead = pagesRead
+                                                , pages = pages
                                             }
 
-                                        newSnippets =
-                                            List.Extra.setIf (\snip -> snip.id == newSnippet.id) newSnippet model.books
+                                        newBooks =
+                                            List.Extra.setIf (\b -> b.id == newBook.id) newBook model.books
                                     in
                                     ( { model
-                                        | books = newSnippets
-                                        , currentBook = Just newSnippet
+                                        | books = newBooks
+                                        , currentBook = Just newBook
                                         , appMode = ViewBooksMode
-                                        , snippetText = newSnippet.title
                                       }
-                                    , sendToBackend (UpdateDatum user.username newSnippet)
+                                    , sendToBackend (UpdateDatum user.username newBook)
                                     )
 
         Close ->
@@ -341,7 +361,7 @@ update msg model =
             )
 
         New ->
-            ( { model | appMode = NewBookMode, message = "New book started" }, Cmd.none )
+            ( { model | appMode = NewBookMode, currentBook = Just (Data.blank model.currentTime), message = "New book started" }, Cmd.none )
 
         ViewContent datum ->
             ( { model | currentBook = Just datum, appMode = ViewBooksMode, bookViewMode = SnippetExpanded }, Cmd.none )
@@ -420,20 +440,20 @@ updateFromBackend msg model =
             ( { model | users = users }, Cmd.none )
 
         -- DATA
-        GotUserData dataList ->
+        GotBooks dataList ->
             let
-                snippets =
+                books =
                     List.sortBy (\snip -> -(Time.posixToMillis snip.creationDate)) dataList
 
                 currentSnippet =
-                    case List.head snippets of
+                    case List.head books of
                         Nothing ->
                             Nothing
 
                         Just snippet ->
                             Just snippet
             in
-            ( { model | books = Data.bookTestData, currentBook = currentSnippet }, Cmd.none )
+            ( { model | books = books, currentBook = currentSnippet }, Cmd.none )
 
         -- USER
         SendUser user ->

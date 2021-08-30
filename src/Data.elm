@@ -4,6 +4,7 @@ module Data exposing
     , DataFile
     , DataId
     , SortOrder(..)
+    , blank
     , bookTestData
     , filter
     , fixUrls
@@ -40,7 +41,7 @@ type alias Book =
     , public : Bool
     , category : String
     , creationDate : Time.Posix
-    , modifcationDate : Time.Posix
+    , modificationDate : Time.Posix
     , finishDate : Maybe Time.Posix
     , pagesReadToday : Int
     , averageReadingRate : Float
@@ -53,6 +54,10 @@ type SortOrder
     | SortByCategory
     | SortByTitle
     | SortByAuthor
+
+
+blank currentTime =
+    make "" currentTime "abc0" "" "" 0
 
 
 b1 =
@@ -88,7 +93,7 @@ make username currentTime id title author pages =
     , public = False
     , category = ""
     , creationDate = currentTime
-    , modifcationDate = currentTime
+    , modificationDate = currentTime
     , finishDate = Nothing
     , pagesReadToday = 0
     , averageReadingRate = 0

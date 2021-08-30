@@ -179,7 +179,7 @@ type ToFrontend
       -- ADMIN
     | GotUsers (List User)
       -- DATA
-    | GotUserData (List Book)
+    | GotBooks (List Book)
       -- USER
     | SendUser User
 

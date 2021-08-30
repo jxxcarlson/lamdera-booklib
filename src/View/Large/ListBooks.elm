@@ -132,10 +132,17 @@ titleButton book maybeCurrentBook =
 
                 Just currentBook ->
                     currentBook.id == book.id
+
+        title =
+            if book.title == "" then
+                "Untitled"
+
+            else
+                book.title
     in
     Input.button (Style.titleButton highlighted)
         { onPress = Just (SetCurrentBook (Just book))
-        , label = Element.text book.title
+        , label = Element.text title
         }
 
 

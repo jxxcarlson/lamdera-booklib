@@ -40,7 +40,7 @@ sendUserData limit username clientId model =
         Just dataFile ->
             case limit of
                 Infinity ->
-                    sendToFrontend clientId (GotUserData dataFile.data)
+                    sendToFrontend clientId (GotBooks dataFile.data)
 
                 Finite n ->
-                    sendToFrontend clientId (GotUserData (List.take n dataFile.data))
+                    sendToFrontend clientId (GotBooks (List.take n dataFile.data))

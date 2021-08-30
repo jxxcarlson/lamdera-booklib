@@ -63,6 +63,7 @@ lhs model =
             [ E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
                 [ View.Input.snippetFilter model (panelWidth_ -260 model)
                 , Button.searchByStarred
+                , Button.new
                 , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
                 ]
             , ListBooks.listBooks model
@@ -86,8 +87,8 @@ rhs model =
         NewBookMode ->
             E.column [ E.spacing 18, E.width (panelWidth 0 model) ]
                 [ E.column [ E.spacing 18 ]
-                    [ rhsHeader model
-                    , View.Input.newBook (panelWidth_ 0 model) (appHeight model - 154) model
+                    [ newBookHeader
+                    , newBook (panelWidth_ 0 model) (appHeight model - 154) model (Data.blank model.currentTime)
                     ]
                 ]
 
@@ -103,6 +104,30 @@ rhs model =
                             , bookEditor (panelWidth_ 0 model) (appHeight model - 154) model book
                             ]
                         ]
+
+
+newBook : Int -> Int -> FrontendModel -> Data.Book -> Element FrontendMsg
+newBook width_ height_ model book =
+    E.column [ E.spacing 18, E.width (E.px width_), E.height (E.px height_) ]
+        [ E.column [ E.spacing 18 ]
+            [ E.column
+                [ E.width (panelWidth 0 model)
+                , E.height (E.px <| appHeight model - 155)
+                , E.spacing 18
+                , E.alignTop
+                , Background.color Color.palePink
+                , E.paddingXY 12 12
+                , Font.size 14
+                , View.Utility.elementAttribute "line-height" "1.5"
+                ]
+                [ View.Input.title model 300
+                , View.Input.subtitle model 300
+                , View.Input.author model 300
+                , View.Input.pagesRead model 300
+                , View.Input.pages model 300
+                ]
+            ]
+        ]
 
 
 bookEditor : Int -> Int -> FrontendModel -> Data.Book -> Element FrontendMsg
@@ -226,18 +251,26 @@ signedInHeader model user =
         ]
 
 
+newBookHeader =
+    E.row [ E.spacing 12 ]
+        [ Button.starSnippet
+        , Button.save
+        , Button.view
+        , Button.delete
+        ]
+
+
 rhsHeader model =
     case model.appMode of
         ViewBookMode ->
             E.row [ E.spacing 12 ]
                 [ Button.starSnippet
-                , Button.new
                 , case model.currentBook of
                     Nothing ->
                         E.none
 
-                    Just snippet ->
-                        Button.editItem2 snippet
+                    Just book ->
+                        Button.editItem2 book
                 , Button.save
                 , Button.view
                 , Button.delete
@@ -246,7 +279,6 @@ rhsHeader model =
         ViewBooksMode ->
             E.row [ E.spacing 12 ]
                 [ Button.starSnippet
-                , Button.new
                 , case model.currentBook of
                     Nothing ->
                         E.none
@@ -258,7 +290,6 @@ rhsHeader model =
         NewBookMode ->
             E.row [ E.spacing 12 ]
                 [ Button.starSnippet
-                , Button.new
                 , case model.currentBook of
                     Nothing ->
                         E.none
@@ -273,7 +304,6 @@ rhsHeader model =
         EditBookMode ->
             E.row [ E.spacing 12 ]
                 [ Button.starSnippet
-                , Button.new
                 , case model.currentBook of
                     Nothing ->
                         E.none

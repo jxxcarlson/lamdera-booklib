@@ -86,7 +86,7 @@ updateFromFrontend sessionId clientId msg model =
             in
             ( { model | dataDict = dataDict }, sendToFrontend clientId (SendMessage message) )
 
-        UpdateDatum username datum ->
+        UpdateDatum username book ->
             case Dict.get username model.dataDict of
                 Nothing ->
                     ( model, sendToFrontend clientId (SendMessage "Can't update: no datafile") )
@@ -95,12 +95,12 @@ updateFromFrontend sessionId clientId msg model =
                     let
                         newData : List Data.Book
                         newData =
-                            List.Extra.setIf (\snip -> snip.id == datum.id) datum dataFile.data
+                            List.Extra.setIf (\b -> b.id == book.id) book dataFile.data
 
                         newDataDict =
                             Dict.insert username { dataFile | data = newData } model.dataDict
                     in
-                    ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ String.left 10 datum.title ++ " ... ' updated.") )
+                    ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ String.left 10 book.title ++ " ... ' updated.") )
 
         DeleteSnippetFromStore username dataId ->
             ( { model | dataDict = Data.remove username dataId model.dataDict }
@@ -113,7 +113,7 @@ updateFromFrontend sessionId clientId msg model =
                     ( model, sendToFrontend clientId (SendMessage "No data!") )
 
                 Just dataFile ->
-                    ( model, sendToFrontend clientId (GotUserData dataFile.data) )
+                    ( model, sendToFrontend clientId (GotBooks dataFile.data) )
 
         SendUsers ->
             ( model, sendToFrontend clientId (GotUsers (Authentication.users model.authenticationDict)) )
