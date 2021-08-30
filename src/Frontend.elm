@@ -274,6 +274,8 @@ update msg model =
                                         , id = token
                                         , subtitle = model.inputSubtitle
                                         , author = model.inputAuthor
+                                        , pagesRead = String.toInt model.inputPagesRead |> Maybe.withDefault 0
+                                        , pages = String.toInt model.inputPages |> Maybe.withDefault 0
                                         , category = model.inputCategory
                                         , creationDate = model.currentTime
                                         , modificationDate = model.currentTime
@@ -359,6 +361,7 @@ update msg model =
                 , inputTitle = book.title
                 , inputSubtitle = book.subtitle
                 , inputAuthor = book.author
+                , inputCategory = book.category
                 , inputPagesRead = String.fromInt book.pagesRead
                 , inputPages = String.fromInt book.pages
                 , appMode = EditBookMode
@@ -367,7 +370,20 @@ update msg model =
             )
 
         New ->
-            ( { model | appMode = NewBookMode, currentBook = Just (Data.blank model.currentTime), message = "New book started" }, Cmd.none )
+            ( { model
+                | appMode = NewBookMode
+                , currentBook = Just (Data.blank model.currentTime)
+                , inputTitle = ""
+                , inputSubtitle = ""
+                , inputAuthor = ""
+                , inputCategory = ""
+                , inputPages = ""
+                , inputPagesRead = ""
+                , inputNotes = ""
+                , message = "New book started"
+              }
+            , Cmd.none
+            )
 
         ViewContent datum ->
             ( { model | currentBook = Just datum, appMode = ViewBooksMode, bookViewMode = SnippetExpanded }, Cmd.none )

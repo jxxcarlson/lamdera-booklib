@@ -1,6 +1,7 @@
 module View.Utility exposing
     ( cssNode
     , elementAttribute
+    , hideIf
     , katexCSS
     , noFocus
     , showIf
@@ -33,6 +34,15 @@ showIfIsAdmin model element =
 showIf : Bool -> Element msg -> Element msg
 showIf isVisible element =
     if isVisible then
+        element
+
+    else
+        Element.none
+
+
+hideIf : Bool -> Element msg -> Element msg
+hideIf isVisible element =
+    if not isVisible then
         element
 
     else

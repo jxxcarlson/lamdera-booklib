@@ -91,7 +91,7 @@ listView model =
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
                     [ E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
-                        [ View.Input.snippetFilter model (appWidth_ model - 210)
+                        [ View.Input.bookFilter model (appWidth_ model - 210)
                         , Button.searchByStarred
                         , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
                         ]

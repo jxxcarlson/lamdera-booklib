@@ -112,8 +112,8 @@ type alias DataDict =
     Dict Username DataFile
 
 
-transformer { title, notes, creationDate } =
-    { targetContent = title ++ String.replace "!!" "wow!" notes, targetDate = creationDate }
+transformer { title, category, author, creationDate } =
+    { targetContent = title ++ " " ++ category ++ " " ++ author, targetDate = creationDate }
 
 
 sortBooks : SortOrder -> List ( Int, Book ) -> List ( Int, Book )

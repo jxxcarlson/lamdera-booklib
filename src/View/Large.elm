@@ -46,27 +46,53 @@ mainColumn model =
 
 lhs model =
     let
-        filteredSnippets =
+        filteredBooks =
             Data.filter (String.trim model.inputBookFilter) model.books
 
-        numberOfSnippets =
+        totalPagesInBooks =
+            List.map .pages filteredBooks |> List.sum
+
+        totalPagesRead =
+            List.map .pagesRead filteredBooks |> List.sum
+
+        percentRead =
+            100 * toFloat totalPagesRead / toFloat totalPagesInBooks |> round
+
+        numberOfBooks =
             String.fromInt (List.length model.books)
 
-        numberOfFilteredSnippets =
-            String.fromInt (List.length filteredSnippets)
+        numberOfFilteredBooks =
+            String.fromInt (List.length filteredBooks)
 
-        ratio =
-            numberOfFilteredSnippets ++ "/" ++ numberOfSnippets
+        ratioPages =
+            "Pages: "
+                ++ String.fromInt totalPagesRead
+                ++ "/"
+                ++ String.fromInt totalPagesInBooks
+                ++ " ("
+                ++ String.fromInt percentRead
+                ++ "%)"
+
+        ratioBooks =
+            "Books: " ++ numberOfFilteredBooks ++ "/" ++ numberOfBooks
     in
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
-            [ E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
-                [ View.Input.snippetFilter model (panelWidth_ -260 model)
-                , Button.searchByStarred
-                , Button.new
-                , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
-                ]
-            , ListBooks.listBooks model
+            [ View.Utility.hideIf (model.currentUser == Nothing) (lhsHeader model ratioBooks ratioPages)
+            , ListBooks.listBooks model filteredBooks
+            ]
+        ]
+
+
+lhsHeader model ratioBooks ratioPages =
+    E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
+        [ View.Input.bookFilter model (panelWidth_ -260 model)
+        , Button.searchByStarred
+        , Button.new
+        , E.row [ E.width (E.px 200), E.spacing 24, E.paddingEach { left = 24, right = 0, top = 0, bottom = 0 } ]
+            [ E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioBooks)
+            , View.Utility.showIf (model.appMode == ViewBooksMode)
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
             ]
         ]
 
@@ -178,7 +204,7 @@ viewBook model book =
                     ]
                 , E.column
                     [ E.width (panelWidth 0 model)
-                    , E.height (E.px <| appHeight model - 335)
+                    , E.height (E.px <| appHeight model - 315)
                     , E.scrollbarY
                     , Font.size 14
                     , E.paddingEach { top = 18, bottom = 0, right = 0, left = 0 }
@@ -202,9 +228,9 @@ footer model =
         , Font.size 14
         , E.inFront (View.Popup.admin model)
         ]
-        [ Button.adminPopup model
-        , Button.exportJson
-        , Button.importJson
+        [ View.Utility.hideIf (model.currentUser == Nothing) (Button.adminPopup model)
+        , View.Utility.hideIf (model.currentUser == Nothing) Button.exportJson
+        , View.Utility.hideIf (model.currentUser == Nothing) Button.importJson
         , messageRow model
         ]
 

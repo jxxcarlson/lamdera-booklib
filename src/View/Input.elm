@@ -1,11 +1,11 @@
 module View.Input exposing
     ( author
+    , bookFilter
     , category
     , newBook
     , pages
     , pagesRead
     , passwordInput
-    , snippetFilter
     , subtitle
     , title
     , usernameInput
@@ -56,7 +56,7 @@ usernameInput model =
     inputFieldTemplate (E.px 120) (E.px 33) "Username" InputUsername model.inputUsername
 
 
-snippetFilter model width_ =
+bookFilter model width_ =
     inputFieldTemplate (E.px width_) (E.px 33) "Filter ..." InputSnippetFilter model.inputBookFilter
 
 

@@ -1,4 +1,4 @@
-module View.Large.ListBooks exposing (..)
+module View.Large.ListBooks exposing (listBooks)
 
 import Data
 import Element
@@ -27,11 +27,11 @@ type alias Model =
     FrontendModel
 
 
-listBooks : Model -> Element FrontendMsg
-listBooks model =
+listBooks : FrontendModel -> List Data.Book -> Element FrontendMsg
+listBooks model books =
     let
         nBooks =
-            List.length model.books
+            List.length books
     in
     Element.table
         [ Element.centerX
@@ -44,7 +44,7 @@ listBooks model =
         , Font.color Style.white
         , clipX
         ]
-        { data = Data.sortBooks model.sortOrder (List.indexedMap Tuple.pair model.books)
+        { data = Data.sortBooks model.sortOrder (List.indexedMap Tuple.pair books)
         , columns =
             [ { header = Element.el (Style.tableHeading ++ [ clipX ]) (indexButton model)
               , width = px 20
