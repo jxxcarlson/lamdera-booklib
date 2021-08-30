@@ -84,6 +84,7 @@ init url key =
       , inputTitle = ""
       , inputSubtitle = ""
       , inputAuthor = ""
+      , inputCategory = ""
       , inputPages = ""
       , inputPagesRead = ""
       , inputNotes = ""
@@ -231,6 +232,9 @@ update msg model =
         InputAuthor str ->
             ( { model | inputAuthor = str }, Cmd.none )
 
+        InputCategory str ->
+            ( { model | inputCategory = str }, Cmd.none )
+
         InputPages str ->
             ( { model | inputPages = str }, Cmd.none )
 
@@ -270,6 +274,7 @@ update msg model =
                                         , id = token
                                         , subtitle = model.inputSubtitle
                                         , author = model.inputAuthor
+                                        , category = model.inputCategory
                                         , creationDate = model.currentTime
                                         , modificationDate = model.currentTime
                                     }
@@ -314,6 +319,7 @@ update msg model =
                                                 | title = model.inputTitle
                                                 , subtitle = model.inputSubtitle
                                                 , author = model.inputAuthor
+                                                , category = model.inputCategory
                                                 , pagesRead = pagesRead
                                                 , pages = pages
                                             }

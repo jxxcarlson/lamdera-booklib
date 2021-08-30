@@ -47,6 +47,7 @@ type alias FrontendModel =
     , inputTitle : String
     , inputSubtitle : String
     , inputAuthor : String
+    , inputCategory : String
     , inputPages : String
     , inputPagesRead : String
     , inputNotes : String
@@ -142,6 +143,7 @@ type FrontendMsg
     | InputTitle String
     | InputSubtitle String
     | InputAuthor String
+    | InputCategory String
     | InputPages String
     | InputPagesRead String
     | InputNotes String

@@ -123,6 +123,7 @@ newBook width_ height_ model book =
                 [ View.Input.title model 300
                 , View.Input.subtitle model 300
                 , View.Input.author model 300
+                , View.Input.category model 300
                 , View.Input.pagesRead model 300
                 , View.Input.pages model 300
                 ]
@@ -147,6 +148,7 @@ bookEditor width_ height_ model book =
                 [ View.Input.title model 300
                 , View.Input.subtitle model 300
                 , View.Input.author model 300
+                , View.Input.category model 300
                 , View.Input.pagesRead model 300
                 , View.Input.pages model 300
                 ]
@@ -166,16 +168,17 @@ viewBook model book =
                 , Font.size 14
                 , Events.onMouseDown (SetAppMode ViewBooksMode)
                 ]
-                [ E.column [ E.width (panelWidth 0 model), E.height (E.px 120), E.spacing 12 ]
+                [ E.column [ E.width (panelWidth 0 model), E.height (E.px 140), E.spacing 12 ]
                     [ E.el [ Font.bold ] (E.text book.title)
                     , E.text book.subtitle
                     , E.text ("by " ++ book.author)
+                    , E.text ("Category: " ++ book.category)
                     , E.text ("Pages read: " ++ String.fromInt book.pagesRead)
                     , E.text ("Pages: " ++ String.fromInt book.pages)
                     ]
                 , E.column
                     [ E.width (panelWidth 0 model)
-                    , E.height (E.px <| appHeight model - 295)
+                    , E.height (E.px <| appHeight model - 335)
                     , E.scrollbarY
                     , Font.size 14
                     , E.paddingEach { top = 18, bottom = 0, right = 0, left = 0 }

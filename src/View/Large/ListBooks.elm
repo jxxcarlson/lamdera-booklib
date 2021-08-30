@@ -17,7 +17,7 @@ import Element
 import Element.Background as Background
 import Element.Font as Font
 import Element.Input as Input
-import Types exposing (FrontendModel, FrontendMsg(..))
+import Types exposing (AppMode(..), FrontendModel, FrontendMsg(..))
 import View.Common.Indicator as Indicator
 import View.Config as Config
 import View.Style as Style
@@ -92,7 +92,7 @@ listBooks model =
               , width = px 40
               , view =
                     \p ->
-                        el [] (el [ alignRight, paddingXY 8 0 ] (Element.text (pageInfo2 (Tuple.second p))))
+                        el [] (el [ alignRight, paddingXY 8 0 ] (pageInfo2Button (Tuple.second p)))
               }
             ]
         }
@@ -159,6 +159,14 @@ categoryButton model =
     Input.button (Style.titleButton2 (model.sortOrder == Data.SortByCategory))
         { onPress = Just (SetSortOrder Data.SortByCategory)
         , label = Element.text "Category"
+        }
+
+
+pageInfo2Button : Data.Book -> Element FrontendMsg
+pageInfo2Button book =
+    Input.button (Style.titleButton2 True)
+        { onPress = Just (Edit book)
+        , label = Element.text (pageInfo2 book)
         }
 
 

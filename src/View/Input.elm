@@ -1,5 +1,6 @@
 module View.Input exposing
     ( author
+    , category
     , newBook
     , pages
     , pagesRead
@@ -72,6 +73,11 @@ subtitle model width_ =
 author : FrontendModel -> Int -> Element FrontendMsg
 author model width_ =
     inputFieldTemplate (E.px width_) (E.px 33) "Author" InputAuthor model.inputAuthor
+
+
+category : FrontendModel -> Int -> Element FrontendMsg
+category model width_ =
+    inputFieldTemplate (E.px width_) (E.px 33) "Category" InputCategory model.inputCategory
 
 
 pagesRead : FrontendModel -> Int -> Element FrontendMsg
