@@ -162,6 +162,7 @@ type ToBackend
     | SendUsers
       -- DATA
     | SaveDatum Username Book
+    | SaveData Username (List Book)
     | SendUserData Username
     | UpdateDatum Username Book
     | DeleteSnippetFromStore Username DataId

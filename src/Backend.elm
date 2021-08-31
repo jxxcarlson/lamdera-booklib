@@ -86,6 +86,21 @@ updateFromFrontend sessionId clientId msg model =
             in
             ( { model | dataDict = dataDict }, sendToFrontend clientId (SendMessage message) )
 
+        SaveData username data ->
+            let
+                dataDict =
+                    List.foldl (\datum dataDictAcc -> Data.insertDatum username datum dataDictAcc) model.dataDict data
+
+                message =
+                    case Dict.get username dataDict of
+                        Nothing ->
+                            "No dataDict"
+
+                        Just dataFile ->
+                            "SaveData:  " ++ String.fromInt (List.length dataFile.data)
+            in
+            ( { model | dataDict = dataDict }, sendToFrontend clientId (SendMessage message) )
+
         UpdateDatum username book ->
             case Dict.get username model.dataDict of
                 Nothing ->

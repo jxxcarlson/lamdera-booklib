@@ -416,13 +416,18 @@ update msg model =
                 Err _ ->
                     ( { model | message = "Error importing snippets" }, Cmd.none )
 
-                Ok snippets ->
-                    ( { model
-                        | books = snippets
-                        , message = "imported: " ++ (String.fromInt <| String.length jsonImport)
-                      }
-                    , Cmd.none
-                    )
+                Ok books ->
+                    case model.currentUser of
+                        Nothing ->
+                            ( { model | message = "Error: no current user" }, Cmd.none )
+
+                        Just user ->
+                            ( { model
+                                | books = books ++ model.books
+                                , message = "imported: " ++ (String.fromInt <| List.length books)
+                              }
+                            , sendToBackend (SaveData user.username books)
+                            )
 
         ExportJson ->
             ( model, Frontend.Cmd.exportJson model )
