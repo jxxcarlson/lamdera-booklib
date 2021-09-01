@@ -412,22 +412,16 @@ update msg model =
             ( model, Task.perform JsonLoaded (File.toString file) )
 
         JsonLoaded jsonImport ->
-            case Codec.decodeData jsonImport of
-                Err _ ->
-                    ( { model | message = "Error importing snippets" }, Cmd.none )
+            case model.currentUser of
+                Nothing -> ({ model | message = "Cannot import data without a signed-in user"}, Cmd.none)
+                Just user ->
+                    case (Codec.decodeSpecialData user.username) jsonImport of
+                        Err _ ->
+                            ( { model | message = "Data read: " ++ (String.fromInt <| String.length jsonImport) ++ ", error importing books" }, Cmd.none )
 
-                Ok books ->
-                    case model.currentUser of
-                        Nothing ->
-                            ( { model | message = "Error: no current user" }, Cmd.none )
-
-                        Just user ->
-                            ( { model
-                                | books = books ++ model.books
-                                , message = "imported: " ++ (String.fromInt <| List.length books)
-                              }
-                            , sendToBackend (SaveData user.username books)
-                            )
+                        Ok books ->
+                                   ( { model | books = books ++ model.books ,  message = "imported: " ++ (String.fromInt <| List.length books) }
+                                    , sendToBackend (SaveData user.username books))
 
         ExportJson ->
             ( model, Frontend.Cmd.exportJson model )

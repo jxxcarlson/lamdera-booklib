@@ -35,7 +35,7 @@ mainColumn model =
         [ E.column [ E.spacing 6, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
             [ E.row [ E.width (appWidth_ 0 model) ]
                 [ title "Booklib"
-                , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
+                -- , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
                 ]
             , header model
             , E.row [ E.spacing 12 ] [ lhs model, rhs model ]

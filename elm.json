@@ -30,6 +30,7 @@
             "elm-community/random-extra": "3.2.0",
             "elm-community/string-extra": "4.0.1",
             "elm-explorations/markdown": "1.0.0",
+            "elm-explorations/test": "1.2.2",
             "jxxcarlson/hex": "4.0.0",
             "ktonon/elm-crypto": "1.1.2",
             "lamdera/codecs": "1.0.0",
@@ -52,9 +53,7 @@
         }
     },
     "test-dependencies": {
-        "direct": {
-            "elm-explorations/test": "1.2.2"
-        },
+        "direct": {},
         "indirect": {
             "Janiczek/elm-bidict": "2.0.1",
             "NoRedInk/elm-string-conversions": "1.0.1",
