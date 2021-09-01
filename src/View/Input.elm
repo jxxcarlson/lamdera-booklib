@@ -26,7 +26,7 @@ inputFieldTemplate width_ height_ default msg text =
         { onChange = msg
         , text = text
         , label = Input.labelHidden default
-        , placeholder = Just <| Input.placeholder [ E.moveUp 5 ] (E.text default)
+        , placeholder = Just <| Input.placeholder [ E.moveUp 5, E.height height_ ] (E.text default)
         }
 
 

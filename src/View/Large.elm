@@ -43,8 +43,24 @@ mainColumn model =
             ]
         ]
 
+-- https://www.hastac.org/sites/default/files/upload/images/post/books.jpg
 
 lhs model =
+    case model.currentUser of
+        Nothing -> signInScreen model
+        Just _ -> signedInLhs model
+
+
+signInScreen model =
+     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
+             [ E.column [ E.spacing 12 ]
+                 [
+                   E.image [E.width (appWidth_ 0 model), E.height (E.px <| appHeight model - 155) ] {src = "https://www.hastac.org/sites/default/files/upload/images/post/books.jpg", description = "Library"}
+                 ]
+             ]
+
+
+signedInLhs model =
     let
         filteredBooks =
             Data.filter (String.trim model.inputBookFilter) model.books
