@@ -175,6 +175,10 @@ newBook width_ height_ model book =
 
 bookEditor : Int -> Int -> FrontendModel -> Data.Book -> Element FrontendMsg
 bookEditor width_ height_ model book =
+    let
+      style = [E.width (E.px 390), Font.size 14, E.spacing 12]
+      label str = E.el [Font.bold, E.width (E.px 80)] (E.text str)
+    in
     E.column [ E.spacing 18, E.width (E.px width_), E.height (E.px height_) ]
         [ E.column [ E.spacing 18 ]
             [ E.column
@@ -187,12 +191,12 @@ bookEditor width_ height_ model book =
                 , Font.size 14
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
-                [ View.Input.title model 300
-                , View.Input.subtitle model 300
-                , View.Input.author model 300
-                , View.Input.category model 300
-                , View.Input.pagesRead model 300
-                , View.Input.pages model 300
+                [ E.row style [label "Title", View.Input.title model 300]
+                , E.row style [label "Subtitle", View.Input.subtitle model 300]
+                , E.row style [label "Author",View.Input.author model 300]
+                , E.row style [label "Category",View.Input.category model 300]
+                , E.row style [label "Pages read",View.Input.pagesRead model 300]
+                , E.row style [label "Pages",View.Input.pages model 300]
                 ]
             ]
         ]
