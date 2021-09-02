@@ -80,6 +80,7 @@ type AppMode
     | ViewBookMode
     | NewBookMode
     | EditBookMode
+    | ViewAboutMode
 
 
 type PopupWindow
@@ -129,7 +130,7 @@ type FrontendMsg
     | New
     | Save
     | Fetch
-    | Help
+    | About
     | Close
     | Edit Book
     | ViewContent Book

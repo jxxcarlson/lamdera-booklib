@@ -275,8 +275,8 @@ update msg model =
         InputNotes str ->
             ( { model | inputNotes = str }, Cmd.none )
 
-        Help ->
-            ( { model | currentBook = Nothing, appMode = ViewBooksMode }, Cmd.none )
+        About ->
+            ( { model | currentBook = Nothing, appMode = ViewAboutMode }, Cmd.none )
 
         Save ->
             case model.currentUser of
@@ -323,6 +323,8 @@ update msg model =
                               }
                             , sendToBackend (SaveDatum user.username newBook)
                             )
+
+                        ViewAboutMode -> (model, Cmd.none)
 
                         EditBookMode ->
                             case model.currentBook of

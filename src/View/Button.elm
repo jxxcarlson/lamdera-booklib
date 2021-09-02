@@ -1,5 +1,7 @@
 module View.Button exposing
-    ( adminPopup
+    ( about
+    , adminPopup
+    , cancelAbout
     , delete
     , editItem
     , editItem2
@@ -8,7 +10,6 @@ module View.Button exposing
     , exportJson
     , fetch
     , getUsers
-    , help
     , importJson
     , linkTemplate
     , new
@@ -112,9 +113,9 @@ fetch =
     buttonTemplate [] Fetch "Fetch"
 
 
-help : Element FrontendMsg
-help =
-    buttonTemplate [] Help "Help"
+about : Element FrontendMsg
+about =
+    buttonTemplate [] About "About"
 
 
 view : Element FrontendMsg
@@ -130,6 +131,11 @@ new =
 delete : Element FrontendMsg
 delete =
     buttonTemplate [] Delete "Delete"
+
+
+cancelAbout : Element FrontendMsg
+cancelAbout =
+    buttonTemplate [] (SetAppMode ViewBooksMode) "Done"
 
 
 editItem datum =

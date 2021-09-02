@@ -1,5 +1,6 @@
 module View.Large exposing (..)
 
+import About
 import Data exposing (Book)
 import Element as E exposing (Element)
 import Element.Background as Background
@@ -35,6 +36,7 @@ mainColumn model =
         [ E.column [ E.spacing 6, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
             [ E.row [ E.width (appWidth_ 0 model) ]
                 [ title "Booklib"
+
                 -- , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
                 ]
             , header model
@@ -43,21 +45,26 @@ mainColumn model =
             ]
         ]
 
+
+
 -- https://www.hastac.org/sites/default/files/upload/images/post/books.jpg
+
 
 lhs model =
     case model.currentUser of
-        Nothing -> signInScreen model
-        Just _ -> signedInLhs model
+        Nothing ->
+            signInScreen model
+
+        Just _ ->
+            signedInLhs model
 
 
 signInScreen model =
-     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
-             [ E.column [ E.spacing 12 ]
-                 [
-                   E.image [E.width (appWidth_ 0 model), E.height (E.px <| appHeight model - 155) ] {src = "https://www.hastac.org/sites/default/files/upload/images/post/books.jpg", description = "Library"}
-                 ]
-             ]
+    E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
+        [ E.column [ E.spacing 12 ]
+            [ E.image [ E.width (appWidth_ 0 model), E.height (E.px <| appHeight model - 155) ] { src = "https://www.hastac.org/sites/default/files/upload/images/post/books.jpg", description = "Library" }
+            ]
+        ]
 
 
 signedInLhs model =
@@ -147,27 +154,46 @@ rhs model =
                             ]
                         ]
 
+        ViewAboutMode ->
+            E.column
+                [ E.spacing 18
+                , E.moveDown 22
+                , E.width (panelWidth 26 model)
+                , E.height (E.px <| appHeight model - 152)
+                , E.scrollbarY
+                , E.paddingXY 24 24
+                , Font.size 14
+                , Background.color (E.rgb255 220 220 255)
+                , E.inFront (E.el [ E.alignRight ] Button.cancelAbout)
+                ]
+                [ Markdown.toHtml [] About.text |> E.html
+                ]
+
 
 newBook : Int -> Int -> FrontendModel -> Data.Book -> Element FrontendMsg
 newBook width_ height_ model book =
+    let
+        w =
+            485
+    in
     E.column [ E.spacing 18, E.width (E.px width_), E.height (E.px height_) ]
         [ E.column [ E.spacing 18 ]
             [ E.column
                 [ E.width (panelWidth 0 model)
+                , E.paddingXY 24 24
                 , E.height (E.px <| appHeight model - 155)
                 , E.spacing 18
                 , E.alignTop
                 , Background.color Color.palePink
-                , E.paddingXY 12 12
                 , Font.size 14
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
-                [ View.Input.title model 300
-                , View.Input.subtitle model 300
-                , View.Input.author model 300
-                , View.Input.category model 300
-                , View.Input.pagesRead model 300
-                , View.Input.pages model 300
+                [ View.Input.title model w
+                , View.Input.subtitle model w
+                , View.Input.author model w
+                , View.Input.category model w
+                , View.Input.pagesRead model w
+                , View.Input.pages model w
                 ]
             ]
         ]
@@ -176,9 +202,14 @@ newBook width_ height_ model book =
 bookEditor : Int -> Int -> FrontendModel -> Data.Book -> Element FrontendMsg
 bookEditor width_ height_ model book =
     let
-      style = [E.width (E.px 390), Font.size 14, E.spacing 12]
-      label str = E.el [Font.bold, E.width (E.px 80)] (E.text str)
-      w = 420
+        style =
+            [ E.width (E.px 390), Font.size 14, E.spacing 12 ]
+
+        label str =
+            E.el [ Font.bold, E.width (E.px 80) ] (E.text str)
+
+        w =
+            420
     in
     E.column [ E.spacing 18, E.width (E.px width_), E.height (E.px height_) ]
         [ E.column [ E.spacing 18 ]
@@ -192,12 +223,12 @@ bookEditor width_ height_ model book =
                 , Font.size 14
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
-                [ E.row style [label "Title", View.Input.title model w]
-                , E.row style [label "Subtitle", View.Input.subtitle model w]
-                , E.row style [label "Author",View.Input.author model w]
-                , E.row style [label "Category",View.Input.category model w]
-                , E.row style [label "Pages read",View.Input.pagesRead model w]
-                , E.row style [label "Pages",View.Input.pages model w]
+                [ E.row style [ label "Title", View.Input.title model w ]
+                , E.row style [ label "Subtitle", View.Input.subtitle model w ]
+                , E.row style [ label "Author", View.Input.author model w ]
+                , E.row style [ label "Category", View.Input.category model w ]
+                , E.row style [ label "Pages read", View.Input.pagesRead model w ]
+                , E.row style [ label "Pages", View.Input.pages model w ]
                 ]
             ]
         ]
@@ -297,7 +328,7 @@ signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
         , Button.fetch
-        , Button.help
+        , Button.about
         ]
 
 
@@ -306,7 +337,8 @@ newBookHeader =
         [ Button.starSnippet
         , Button.save
         , Button.view
-        , Button.delete
+
+        --, Button.delete
         ]
 
 
@@ -323,7 +355,8 @@ rhsHeader model =
                         Button.editItem2 book
                 , Button.save
                 , Button.view
-                , Button.delete
+
+                -- , Button.delete
                 ]
 
         ViewBooksMode ->
@@ -348,7 +381,8 @@ rhsHeader model =
                         Button.editItem2 snippet
                 , Button.save
                 , Button.view
-                , Button.delete
+
+                --, Button.delete
                 ]
 
         EditBookMode ->
@@ -362,7 +396,19 @@ rhsHeader model =
                         Button.editItem2 snippet
                 , Button.save
                 , Button.view
-                , Button.delete
+
+                --, Button.delete
+                ]
+
+        ViewAboutMode ->
+            E.row [ E.spacing 12 ]
+                [ Button.starSnippet
+                , case model.currentBook of
+                    Nothing ->
+                        E.none
+
+                    Just snippet ->
+                        Button.editItem2 snippet
                 ]
 
 
