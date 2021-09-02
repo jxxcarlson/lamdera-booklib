@@ -43,6 +43,7 @@ type alias FrontendModel =
     , bookViewMode : BookViewMode
     , sortOrder : SortOrder
 
+
     -- INPUT
     , inputTitle : String
     , inputSubtitle : String
@@ -58,8 +59,11 @@ type alias FrontendModel =
     , popupStatus : PopupStatus
     , viewMode : ViewMode
     , device : Element.DeviceClass
+    , bookViewState : BookViewState
     }
 
+
+type alias BookViewState = { bookId : Maybe String, clicks : Int }
 
 type ViewMode
     = SmallView

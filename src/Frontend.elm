@@ -88,6 +88,7 @@ init url key =
       , inputPages = ""
       , inputPagesRead = ""
       , inputNotes = ""
+      , bookViewState = {bookId = Nothing, clicks = 0}
       }
     , Cmd.batch [ Frontend.Cmd.setupWindow, Frontend.Cmd.getRandomNumberFE ]
     )
@@ -211,8 +212,38 @@ update msg model =
         SetSortOrder sortOrder ->
             ( { model | sortOrder = sortOrder }, Cmd.none )
 
-        SetCurrentBook book ->
-            ( { model | currentBook = book, appMode = ViewBookMode }, Cmd.none )
+        SetCurrentBook maybeBook ->
+            case maybeBook of
+                Nothing -> (model, Cmd.none)
+                Just book ->
+                    let
+                        oldBookViewState = model.bookViewState
+                        newBookViewState = if oldBookViewState.bookId == Just book.id then
+                                            {oldBookViewState | clicks = modBy 3 (1 + model.bookViewState.clicks)}
+                                        else
+                                            { oldBookViewState | bookId = Just book.id, clicks = 0}
+
+
+                        appMode = case newBookViewState.clicks of
+                            0 -> ViewBookMode
+                            1 -> EditBookMode
+                            _ -> ViewBooksMode
+
+
+
+                    in
+                    if appMode == EditBookMode then
+                        ( { model | currentBook = Just book
+                             , message = "Editing " ++ book.title
+                              , inputTitle = book.title
+                              , inputSubtitle = book.subtitle
+                              , inputAuthor = book.author
+                              , inputCategory = book.category
+                              , inputPagesRead = String.fromInt book.pagesRead
+                              , inputPages = String.fromInt book.pages
+                              , appMode = appMode, bookViewState = newBookViewState }, Cmd.none )
+                    else
+                        ( { model | currentBook = Just book, appMode = appMode, bookViewState = newBookViewState }, Cmd.none )
 
         Fetch ->
             case model.currentUser of
