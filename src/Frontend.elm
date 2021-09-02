@@ -72,7 +72,7 @@ init url key =
       , currentBook = Nothing
       , inputBookFilter = ""
       , bookViewMode = SnippetCollapsed
-      , sortOrder = Data.NormalSortOrder
+      , sortOrder = Data.SortByMostRecent
 
       -- USER
       , currentUser = Nothing
@@ -355,6 +355,7 @@ update msg model =
                                                 , category = model.inputCategory
                                                 , pagesRead = pagesRead
                                                 , pages = pages
+                                                , modificationDate = model.currentTime
                                             }
 
                                         newBooks =

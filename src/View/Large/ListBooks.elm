@@ -100,9 +100,20 @@ listBooks model books =
 
 indexButton : Model -> Element FrontendMsg
 indexButton model =
+    let
+       sortOrder =  case model.sortOrder of
+            Data.NormalSortOrder -> Data.SortByMostRecent
+            Data.SortByMostRecent -> Data.NormalSortOrder
+            _ -> Data.NormalSortOrder
+
+       labelText = case model.sortOrder of
+           Data.NormalSortOrder -> "N"
+           Data.SortByMostRecent -> "R"
+           _ -> "@"
+    in
     Input.button (Style.titleButton2 (model.sortOrder == Data.NormalSortOrder))
-        { onPress = Just (SetSortOrder Data.NormalSortOrder)
-        , label = Element.text "N"
+        { onPress = Just (SetSortOrder sortOrder)
+        , label = Element.text labelText
         }
 
 

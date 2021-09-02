@@ -53,6 +53,7 @@ type SortOrder
     | SortByCategory
     | SortByTitle
     | SortByAuthor
+    | SortByMostRecent
 
 
 blank currentTime =
@@ -114,6 +115,11 @@ sortBooks sortOrder books =
         SortByAuthor ->
             List.sortBy (\b -> Tuple.second b |> .author) books
 
+        SortByMostRecent ->
+            List.sortBy (\b -> Tuple.second b |> modificationDateToInt) books
+
+
+modificationDateToInt = .modificationDate >> Time.posixToMillis >> (\x -> -x)
 
 filter : String -> List Book -> List Book
 filter filterString data =
