@@ -169,7 +169,7 @@ type ToBackend
     | SaveData Username (List Book)
     | SendUserData Username
     | UpdateDatum Username Book
-    | DeleteSnippetFromStore Username DataId
+    | DeleteBookFromStore Username DataId
       -- USER
     | SignInOrSignUp String String
 

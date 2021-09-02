@@ -5,7 +5,6 @@ module Data exposing
     , DataId
     , SortOrder(..)
     , blank
-    , bookTestData
     , filter
     , fixUrls
     , insertDatum
@@ -58,25 +57,6 @@ type SortOrder
 
 blank currentTime =
     make "" currentTime "abc0" "" "" 0
-
-
-b1 =
-    make "jxxcarlson" (Time.millisToPosix (1630282884 * 1000)) "abc1" "Periodic Table" "Phineas Larchstone" 300
-
-
-b2 =
-    make "jxxcarlson" (Time.millisToPosix (1630282884 * 1000)) "abc2" "Plants, their stories" "Morlock Jones" 400
-
-
-b3 =
-    make "jxxcarlson" (Time.millisToPosix (1630282884 * 1000)) "abc3" "Bacteria, a Taxonomy" "Sarah Proudfoot" 700
-
-
-bookTestData =
-    [ { b1 | category = "Chemistry", pagesRead = 150, notes = "Really good intro to Chem.  Has all the elements!" }
-    , { b2 | category = "Biology", pagesRead = 120, notes = "Morlock knows how to tell a wild story." }
-    , { b3 | category = "Biology", pagesRead = 200, notes = "Dr. Proudfoot turns the world's  most boring subject into a thriller!" }
-    ]
 
 
 make : Username -> Time.Posix -> String -> String -> String -> Int -> Book

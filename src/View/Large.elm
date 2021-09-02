@@ -178,25 +178,26 @@ bookEditor width_ height_ model book =
     let
       style = [E.width (E.px 390), Font.size 14, E.spacing 12]
       label str = E.el [Font.bold, E.width (E.px 80)] (E.text str)
+      w = 420
     in
     E.column [ E.spacing 18, E.width (E.px width_), E.height (E.px height_) ]
         [ E.column [ E.spacing 18 ]
             [ E.column
-                [ E.width (panelWidth 0 model)
+                [ E.width (panelWidth 23 model)
                 , E.height (E.px <| appHeight model - 155)
                 , E.spacing 18
                 , E.alignTop
                 , Background.color Color.palePink
-                , E.paddingXY 12 12
+                , E.paddingXY 24 24
                 , Font.size 14
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
-                [ E.row style [label "Title", View.Input.title model 300]
-                , E.row style [label "Subtitle", View.Input.subtitle model 300]
-                , E.row style [label "Author",View.Input.author model 300]
-                , E.row style [label "Category",View.Input.category model 300]
-                , E.row style [label "Pages read",View.Input.pagesRead model 300]
-                , E.row style [label "Pages",View.Input.pages model 300]
+                [ E.row style [label "Title", View.Input.title model w]
+                , E.row style [label "Subtitle", View.Input.subtitle model w]
+                , E.row style [label "Author",View.Input.author model w]
+                , E.row style [label "Category",View.Input.category model w]
+                , E.row style [label "Pages read",View.Input.pagesRead model w]
+                , E.row style [label "Pages",View.Input.pages model w]
                 ]
             ]
         ]
@@ -428,7 +429,7 @@ panelWidth delta model =
 
 panelWidth_ : Int -> { a | windowWidth : Int } -> Int
 panelWidth_ delta model =
-    round (min 549 (0.48 * toFloat model.windowWidth)) + delta
+    round (min 535 (0.48 * toFloat model.windowWidth)) + delta
 
 
 mainColumnStyle model =

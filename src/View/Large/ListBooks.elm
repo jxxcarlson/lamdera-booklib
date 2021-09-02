@@ -59,13 +59,13 @@ listBooks model books =
                         displayShareStatus (Tuple.second p)
               }
             , { header = Element.el (Style.tableHeading ++ [ clipX ]) (titleHeadingButton model)
-              , width = px 200
+              , width = px 332
               , view =
                     \p ->
                         titleButton (Tuple.second p) model.currentBook
               }
             , { header = Element.el Style.tableHeading (authorButton model)
-              , width = px 150
+              , width = px 250
               , view =
                     \p ->
                         el [ clipX ] (Element.text (Tuple.second p).author)

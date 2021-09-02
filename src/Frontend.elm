@@ -376,14 +376,14 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
-                Just snippet ->
+                Just book ->
                     ( { model
                         | currentBook = Nothing
                         , snippetText = ""
                         , appMode = ViewBooksMode
-                        , books = List.filter (\snip -> snip.id /= snippet.id) model.books
+                        , books = List.filter (\snip -> snip.id /= book.id) model.books
                       }
-                    , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
+                    , sendToBackend (DeleteBookFromStore book.username book.id)
                     )
 
         Edit book ->
