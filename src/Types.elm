@@ -28,7 +28,7 @@ type alias FrontendModel =
     , appMode : AppMode
 
     -- ADMIN
-    , users : List User
+    , userData : List { name : Username, books : Int, pages : Int, pagesRead : Int }
 
     -- USER
     , currentUser : Maybe User
@@ -42,7 +42,6 @@ type alias FrontendModel =
     , inputBookFilter : String
     , bookViewMode : BookViewMode
     , sortOrder : SortOrder
-
 
     -- INPUT
     , inputTitle : String
@@ -63,7 +62,9 @@ type alias FrontendModel =
     }
 
 
-type alias BookViewState = { bookId : Maybe String, clicks : Int }
+type alias BookViewState =
+    { bookId : Maybe String, clicks : Int }
+
 
 type ViewMode
     = SmallView
@@ -157,14 +158,14 @@ type FrontendMsg
     | SetAppMode AppMode
       -- ADMIN
     | AdminRunTask
-    | GetUsers
+    | GetAllUserData
 
 
 type ToBackend
     = NoOpToBackend
       -- ADMIN
     | RunTask
-    | SendUsers
+    | SendAllUserData
       -- DATA
     | SaveDatum Username Book
     | SaveData Username (List Book)
@@ -185,7 +186,7 @@ type ToFrontend
     = NoOpToFrontend
     | SendMessage String
       -- ADMIN
-    | GotUsers (List User)
+    | GotAllUserData (List { name : Username, books : Int, pages : Int, pagesRead : Int })
       -- DATA
     | GotBooks (List Book)
       -- USER

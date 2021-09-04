@@ -24,29 +24,52 @@ admin model =
             , E.paddingXY 18 18
             , E.spacing 12
             ]
-            [ header model, viewUsers model.users ]
+            [ header model, viewUserData model.userData ]
 
 
 header : FrontendModel -> Element FrontendMsg
 header model =
     E.row [ E.spacing 12 ]
         [ E.el [ Font.size 18 ] (E.text "Admin")
-        , Button.getUsers
         ]
 
 
-viewUsers : List User -> Element msg
-viewUsers users =
+viewUserData : List { name : String, books : Int, pages : Int, pagesRead : Int } -> Element msg
+viewUserData userData =
     E.column
         [ E.spacing 8
         ]
-        (List.map viewUser (List.sortBy (\user -> user.username) users))
+        (List.map viewUserDatum userData)
 
 
-viewUser : User -> Element msg
-viewUser user =
-    E.row
-        [ E.spacing 8
-        , E.width (E.px 450)
+viewUserDatum : { name : String, books : Int, pages : Int, pagesRead : Int } -> Element msg
+viewUserDatum datum =
+    let
+        w =
+            40
+    in
+    E.row [ E.spacing 8, E.width (E.px 450) ]
+        [ E.el [ E.width (E.px 60) ] (E.text datum.name)
+        , item (String.fromInt datum.books)
+        , item (String.fromInt datum.pages)
+        , item (String.fromInt datum.pagesRead)
+        , item (String.fromInt (ratio datum))
         ]
-        [ E.el [] (E.text user.username) ]
+
+
+ratio datum =
+    let
+        a =
+            datum.pagesRead |> toFloat
+
+        b =
+            datum.pages |> toFloat
+
+        r =
+            round (a / b)
+    in
+    round (a / b)
+
+
+item str =
+    E.el [ E.width (E.px 50) ] (E.el [ E.alignRight ] (E.text <| str))

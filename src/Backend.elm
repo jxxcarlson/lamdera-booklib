@@ -130,8 +130,8 @@ updateFromFrontend sessionId clientId msg model =
                 Just dataFile ->
                     ( model, sendToFrontend clientId (GotBooks dataFile.data) )
 
-        SendUsers ->
-            ( model, sendToFrontend clientId (GotUsers (Authentication.users model.authenticationDict)) )
+        SendAllUserData ->
+            ( model, sendToFrontend clientId (GotAllUserData (Backend.Update.allUsersSummary model)) )
 
         -- USER
         SignInOrSignUp username transitPassword ->

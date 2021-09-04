@@ -9,7 +9,6 @@ module View.Button exposing
     , expandCollapseView
     , exportJson
     , fetch
-    , getUsers
     , importJson
     , linkTemplate
     , new
@@ -241,7 +240,3 @@ adminPopup model =
             Maybe.map .username model.currentUser == Just Config.administrator
     in
     View.Utility.showIf isVisible <| buttonTemplate [] (ChangePopupStatus nextState) "Admin"
-
-
-getUsers =
-    buttonTemplate [] GetUsers "Get Users"

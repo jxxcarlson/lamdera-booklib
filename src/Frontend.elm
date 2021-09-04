@@ -58,7 +58,7 @@ init url key =
       , appMode = ViewBooksMode
 
       -- ADMIN
-      , users = []
+      , userData = []
 
       -- UI
       , windowWidth = 1200
@@ -88,7 +88,7 @@ init url key =
       , inputPages = ""
       , inputPagesRead = ""
       , inputNotes = ""
-      , bookViewState = {bookId = Nothing, clicks = 0}
+      , bookViewState = { bookId = Nothing, clicks = 0 }
       }
     , Cmd.batch [ Frontend.Cmd.setupWindow, Frontend.Cmd.getRandomNumberFE ]
     )
@@ -139,7 +139,15 @@ update msg model =
             ( { model | windowWidth = w, windowHeight = h }, Cmd.none )
 
         ChangePopupStatus status ->
-            ( { model | popupStatus = status }, Cmd.none )
+            let
+                cmd =
+                    if status == PopupOpen AdminPopup then
+                        sendToBackend SendAllUserData
+
+                    else
+                        Cmd.none
+            in
+            ( { model | popupStatus = status }, cmd )
 
         GotViewport vp ->
             Frontend.Update.updateWithViewport vp model
@@ -214,34 +222,48 @@ update msg model =
 
         SetCurrentBook maybeBook ->
             case maybeBook of
-                Nothing -> (model, Cmd.none)
+                Nothing ->
+                    ( model, Cmd.none )
+
                 Just book ->
                     let
-                        oldBookViewState = model.bookViewState
-                        newBookViewState = if oldBookViewState.bookId == Just book.id then
-                                            {oldBookViewState | clicks = modBy 3 (1 + model.bookViewState.clicks)}
-                                        else
-                                            { oldBookViewState | bookId = Just book.id, clicks = 0}
+                        oldBookViewState =
+                            model.bookViewState
 
+                        newBookViewState =
+                            if oldBookViewState.bookId == Just book.id then
+                                { oldBookViewState | clicks = modBy 3 (1 + model.bookViewState.clicks) }
 
-                        appMode = case newBookViewState.clicks of
-                            0 -> ViewBookMode
-                            1 -> EditBookMode
-                            _ -> ViewBooksMode
+                            else
+                                { oldBookViewState | bookId = Just book.id, clicks = 0 }
 
+                        appMode =
+                            case newBookViewState.clicks of
+                                0 ->
+                                    ViewBookMode
 
+                                1 ->
+                                    EditBookMode
 
+                                _ ->
+                                    ViewBooksMode
                     in
                     if appMode == EditBookMode then
-                        ( { model | currentBook = Just book
-                             , message = "Editing " ++ book.title
-                              , inputTitle = book.title
-                              , inputSubtitle = book.subtitle
-                              , inputAuthor = book.author
-                              , inputCategory = book.category
-                              , inputPagesRead = String.fromInt book.pagesRead
-                              , inputPages = String.fromInt book.pages
-                              , appMode = appMode, bookViewState = newBookViewState }, Cmd.none )
+                        ( { model
+                            | currentBook = Just book
+                            , message = "Editing " ++ book.title
+                            , inputTitle = book.title
+                            , inputSubtitle = book.subtitle
+                            , inputAuthor = book.author
+                            , inputCategory = book.category
+                            , inputPagesRead = String.fromInt book.pagesRead
+                            , inputPages = String.fromInt book.pages
+                            , appMode = appMode
+                            , bookViewState = newBookViewState
+                          }
+                        , Cmd.none
+                        )
+
                     else
                         ( { model | currentBook = Just book, appMode = appMode, bookViewState = newBookViewState }, Cmd.none )
 
@@ -324,7 +346,8 @@ update msg model =
                             , sendToBackend (SaveDatum user.username newBook)
                             )
 
-                        ViewAboutMode -> (model, Cmd.none)
+                        ViewAboutMode ->
+                            ( model, Cmd.none )
 
                         EditBookMode ->
                             case model.currentBook of
@@ -447,15 +470,18 @@ update msg model =
 
         JsonLoaded jsonImport ->
             case model.currentUser of
-                Nothing -> ({ model | message = "Cannot import data without a signed-in user"}, Cmd.none)
+                Nothing ->
+                    ( { model | message = "Cannot import data without a signed-in user" }, Cmd.none )
+
                 Just user ->
-                    case (Codec.decodeSpecialData user.username) jsonImport of
+                    case Codec.decodeSpecialData user.username jsonImport of
                         Err _ ->
                             ( { model | message = "Data read: " ++ (String.fromInt <| String.length jsonImport) ++ ", error importing books" }, Cmd.none )
 
                         Ok books ->
-                                   ( { model | books = books ++ model.books ,  message = "imported: " ++ (String.fromInt <| List.length books) }
-                                    , sendToBackend (SaveData user.username books))
+                            ( { model | books = books ++ model.books, message = "imported: " ++ (String.fromInt <| List.length books) }
+                            , sendToBackend (SaveData user.username books)
+                            )
 
         ExportJson ->
             ( model, Frontend.Cmd.exportJson model )
@@ -480,8 +506,8 @@ update msg model =
         AdminRunTask ->
             ( model, sendToBackend RunTask )
 
-        GetUsers ->
-            ( model, sendToBackend SendUsers )
+        GetAllUserData ->
+            ( model, sendToBackend SendAllUserData )
 
 
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
@@ -491,8 +517,8 @@ updateFromBackend msg model =
             ( model, Cmd.none )
 
         -- ADMIN
-        GotUsers users ->
-            ( { model | users = users }, Cmd.none )
+        GotAllUserData userData ->
+            ( { model | userData = userData }, Cmd.none )
 
         -- DATA
         GotBooks dataList ->

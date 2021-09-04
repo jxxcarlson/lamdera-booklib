@@ -1,5 +1,6 @@
 module Backend.Update exposing
-    ( gotAtomsphericRandomNumber
+    ( allUsersSummary
+    , gotAtomsphericRandomNumber
     , setupUser
     )
 
@@ -8,6 +9,7 @@ import Data
 import Dict
 import Hex
 import Lamdera exposing (ClientId, broadcast, sendToFrontend)
+import Maybe.Extra
 import Random
 import Token
 import Types exposing (..)
@@ -48,6 +50,28 @@ gotAtomsphericRandomNumber model result =
 
 
 -- USER
+
+
+userSummary : Model -> Username -> Maybe { name : Username, books : Int, pages : Int, pagesRead : Int }
+userSummary model username =
+    case Dict.get username model.dataDict of
+        Nothing ->
+            Nothing
+
+        Just dataFile ->
+            let
+                pages =
+                    List.map .pages dataFile.data |> List.sum
+
+                pagesRead =
+                    List.map .pagesRead dataFile.data |> List.sum
+            in
+            Just { name = username, books = List.length dataFile.data, pages = pages, pagesRead = pagesRead }
+
+
+allUsersSummary : Model -> List { name : Username, books : Int, pages : Int, pagesRead : Int }
+allUsersSummary model =
+    List.map (userSummary model) (Dict.keys model.dataDict) |> Maybe.Extra.values
 
 
 setupUser : Model -> ClientId -> String -> String -> ( BackendModel, Cmd BackendMsg )
