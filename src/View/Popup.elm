@@ -53,7 +53,7 @@ viewUserDatum datum =
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)
         , item (String.fromInt datum.pages)
-        , item (String.fromInt (ratio datum))
+        , item (ratio datum)
         ]
 
 
@@ -65,7 +65,11 @@ ratio datum =
         b =
             datum.pages |> toFloat
     in
-    round ((100.0 * a) / b)
+    if a == 0 then
+        "_"
+
+    else
+        String.fromInt <| round ((100.0 * a) / b)
 
 
 item str =
