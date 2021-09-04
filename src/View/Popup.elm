@@ -49,10 +49,10 @@ viewUserDatum datum =
             40
     in
     E.row [ E.spacing 8, E.width (E.px 450) ]
-        [ E.el [ E.width (E.px 60) ] (E.text datum.name)
+        [ E.el [ E.width (E.px 130) ] (E.text datum.name)
         , item (String.fromInt datum.books)
-        , item (String.fromInt datum.pages)
         , item (String.fromInt datum.pagesRead)
+        , item (String.fromInt datum.pages)
         , item (String.fromInt (ratio datum))
         ]
 
@@ -64,11 +64,8 @@ ratio datum =
 
         b =
             datum.pages |> toFloat
-
-        r =
-            round (a / b)
     in
-    round (a / b)
+    round ((100.0 * a) / b)
 
 
 item str =
