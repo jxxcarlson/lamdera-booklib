@@ -6,11 +6,13 @@ module Backend.Update exposing
 
 import Authentication
 import Data
+import DateTime
 import Dict
 import Hex
 import Lamdera exposing (ClientId, broadcast, sendToFrontend)
 import Maybe.Extra
 import Random
+import Time
 import Token
 import Types exposing (..)
 import User exposing (User)
@@ -100,3 +102,18 @@ setupUser model clientId username transitPassword =
                 , sendToFrontend clientId (SendUser user)
                 ]
             )
+
+
+isUTCTime : Int -> Int -> Time.Posix -> Bool
+isUTCTime hours minutes t =
+    let
+        dt =
+            DateTime.fromPosix t
+
+        h =
+            DateTime.getHours dt
+
+        m =
+            DateTime.getMinutes dt
+    in
+    h == hours && m == minutes

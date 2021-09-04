@@ -10,11 +10,11 @@ import Element.Font as Font
 import Html exposing (Html)
 import Markdown
 import Types exposing (..)
+import View.AdminPopup
 import View.Button as Button
 import View.Color as Color
 import View.Input
 import View.Large.ListBooks as ListBooks
-import View.Popup
 import View.Style
 import View.Utility
 
@@ -278,7 +278,7 @@ footer model =
         , E.height (E.px 25)
         , E.width (appWidth_ 0 model)
         , Font.size 14
-        , E.inFront (View.Popup.admin model)
+        , E.inFront (View.AdminPopup.admin model)
         ]
         [ View.Utility.hideIf (model.currentUser == Nothing) (Button.adminPopup model)
         , View.Utility.hideIf (model.currentUser == Nothing) Button.exportJson

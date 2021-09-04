@@ -1,4 +1,4 @@
-module View.Popup exposing (admin)
+module View.AdminPopup exposing (admin)
 
 import Element as E exposing (Element)
 import Element.Background as Background
@@ -36,10 +36,14 @@ header model =
 
 viewUserData : List { name : String, books : Int, pages : Int, pagesRead : Int } -> Element msg
 viewUserData userData =
+    let
+        n =
+            List.length userData
+    in
     E.column
         [ E.spacing 8
         ]
-        (List.map viewUserDatum userData)
+        (E.row [ Font.size 14 ] [ E.text <| "Users: " ++ String.fromInt n ] :: List.map viewUserDatum userData)
 
 
 viewUserDatum : { name : String, books : Int, pages : Int, pagesRead : Int } -> Element msg
