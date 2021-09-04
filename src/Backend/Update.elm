@@ -104,13 +104,13 @@ userReadingRate username model =
                     0.5
 
                 pagesRead1 =
-                    dataFile.pagesRead |> Debug.log "pagesRead1"
+                    dataFile.pagesRead
 
                 pagesRead =
-                    List.map .pagesRead dataFile.data |> List.sum |> Debug.log "pagesRead2"
+                    List.map .pagesRead dataFile.data |> List.sum
 
                 pagesReadToday =
-                    pagesRead - pagesRead1 |> Debug.log "pagesReadToday"
+                    pagesRead - pagesRead1
 
                 rate =
                     if pagesRead1 == 0 then
