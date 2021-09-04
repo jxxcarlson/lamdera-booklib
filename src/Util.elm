@@ -1,4 +1,4 @@
-module Util exposing (comparePosix, ifApply, insertInList)
+module Util exposing (comparePosix, ifApply, insertInList, roundTo)
 
 import List.Extra
 import Time
@@ -30,3 +30,13 @@ ifApply test transform a =
         a
 
 
+roundTo : Int -> Float -> Float
+roundTo k x =
+    let
+        factor =
+            10.0 ^ toFloat k
+
+        x1 =
+            round (factor * x)
+    in
+    toFloat x1 / factor

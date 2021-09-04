@@ -3,8 +3,9 @@ module View.AdminPopup exposing (admin)
 import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
-import Types exposing (FrontendModel, FrontendMsg(..), PopupStatus(..), PopupWindow(..))
+import Types exposing (FrontendModel, FrontendMsg(..), PopupStatus(..), PopupWindow(..), UserInfo)
 import User exposing (User)
+import Util
 import View.Button as Button
 import View.Color
 import View.Utility
@@ -34,7 +35,7 @@ header model =
         ]
 
 
-viewUserData : List { name : String, books : Int, pages : Int, pagesRead : Int } -> Element msg
+viewUserData : List UserInfo -> Element msg
 viewUserData userData =
     let
         n =
@@ -46,18 +47,20 @@ viewUserData userData =
         (E.row [ Font.size 14 ] [ E.text <| "Users: " ++ String.fromInt n ] :: List.map viewUserDatum userData)
 
 
-viewUserDatum : { name : String, books : Int, pages : Int, pagesRead : Int } -> Element msg
+viewUserDatum : UserInfo -> Element msg
 viewUserDatum datum =
     let
         w =
             40
     in
     E.row [ E.spacing 8, E.width (E.px 450) ]
-        [ E.el [ E.width (E.px 130) ] (E.text datum.name)
+        [ E.el [ E.width (E.px 110) ] (E.text datum.name)
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)
         , item (String.fromInt datum.pages)
         , item (ratio datum)
+        , item (String.fromInt datum.pagesReadToday)
+        , item (String.fromFloat <| Util.roundTo 2 datum.readingRate)
         ]
 
 

@@ -28,12 +28,13 @@ type alias FrontendModel =
     , appMode : AppMode
 
     -- ADMIN
-    , userData : List { name : Username, books : Int, pages : Int, pagesRead : Int }
+    , userData : List UserInfo
 
     -- USER
     , currentUser : Maybe User
     , inputUsername : String
     , inputPassword : String
+    , readingRate : Float
 
     -- DATA
     , snippetText : String
@@ -100,6 +101,7 @@ type alias BackendModel =
     , randomSeed : Random.Seed
     , randomAtmosphericInt : Maybe Int
     , currentTime : Time.Posix
+    , taskStatus : TaskStatus
 
     -- DATA
     , dataDict : DataDict
@@ -107,6 +109,11 @@ type alias BackendModel =
     -- USER
     , authenticationDict : AuthenticationDict
     }
+
+
+type TaskStatus
+    = TaskWaiting
+    | TaskRunning
 
 
 type FrontendMsg
@@ -182,15 +189,20 @@ type BackendMsg
     | Tick Time.Posix
 
 
+type alias UserInfo =
+    { name : Username, books : Int, pages : Int, pagesRead : Int, pagesReadToday : Int, readingRate : Float }
+
+
 type ToFrontend
     = NoOpToFrontend
     | SendMessage String
       -- ADMIN
-    | GotAllUserData (List { name : Username, books : Int, pages : Int, pagesRead : Int })
+    | GotAllUserData (List UserInfo)
       -- DATA
     | GotBooks (List Book)
       -- USER
     | SendUser User
+    | SendReadingRate Float
 
 
 type ExtendedInteger

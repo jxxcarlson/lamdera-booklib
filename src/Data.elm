@@ -86,6 +86,9 @@ type alias DataFile =
     , username : Username
     , creationDate : Time.Posix
     , modificationDate : Time.Posix
+    , pagesRead : Int
+    , pagesReadToday : Int
+    , readingRate : Float
     }
 
 
@@ -119,7 +122,9 @@ sortBooks sortOrder books =
             List.sortBy (\b -> Tuple.second b |> modificationDateToInt) books
 
 
-modificationDateToInt = .modificationDate >> Time.posixToMillis >> (\x -> -x)
+modificationDateToInt =
+    .modificationDate >> Time.posixToMillis >> (\x -> -x)
+
 
 filter : String -> List Book -> List Book
 filter filterString data =
@@ -143,6 +148,9 @@ setupUser currentTime username dataDict =
             , username = username
             , creationDate = currentTime
             , modificationDate = currentTime
+            , pagesRead = 0
+            , pagesReadToday = 0
+            , readingRate = 0
             }
     in
     Dict.insert username newDataFile dataDict

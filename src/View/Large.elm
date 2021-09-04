@@ -2,14 +2,16 @@ module View.Large exposing (..)
 
 import About
 import Data exposing (Book)
+import DateTime
 import Element as E exposing (Element)
 import Element.Background as Background
-import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
 import Markdown
+import Sort exposing (SortParam(..))
 import Types exposing (..)
+import Util
 import View.AdminPopup
 import View.Button as Button
 import View.Color as Color
@@ -98,16 +100,32 @@ signedInLhs model =
 
         ratioBooks =
             "Books: " ++ numberOfFilteredBooks ++ "/" ++ numberOfBooks
+
+        rate =
+            "Rate: " ++ (String.fromFloat <| Util.roundTo 2 model.readingRate)
     in
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
-            [ View.Utility.hideIf (model.currentUser == Nothing) (lhsHeader model ratioBooks ratioPages)
+            [ View.Utility.hideIf (model.currentUser == Nothing) (lhsHeader model ratioBooks ratioPages rate)
             , ListBooks.listBooks model filteredBooks
             ]
         ]
 
 
-lhsHeader model ratioBooks ratioPages =
+lhsHeader model ratioBooks ratioPages rate =
+    let
+        dt =
+            DateTime.fromPosix model.currentTime
+
+        h =
+            DateTime.getHours dt |> String.fromInt |> String.padLeft 2 '0'
+
+        m =
+            DateTime.getMinutes dt |> String.fromInt |> String.padLeft 2 '0'
+
+        hm =
+            "UTC: " ++ h ++ ":" ++ m
+    in
     E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
         [ View.Input.bookFilter model (panelWidth_ -260 model)
         , Button.searchByStarred
@@ -116,6 +134,10 @@ lhsHeader model ratioBooks ratioPages =
             [ E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioBooks)
             , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
+            , View.Utility.showIf (model.appMode == ViewBooksMode)
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text rate))
+            , View.Utility.showIf (model.appMode == ViewBooksMode)
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
             ]
         ]
 

@@ -60,6 +60,9 @@ init url key =
       -- ADMIN
       , userData = []
 
+      -- USER
+      , readingRate = 0
+
       -- UI
       , windowWidth = 1200
       , windowHeight = 900
@@ -539,6 +542,9 @@ updateFromBackend msg model =
         -- USER
         SendUser user ->
             ( { model | currentUser = Just user, currentBook = Nothing }, Cmd.none )
+
+        SendReadingRate rate ->
+            ( { model | readingRate = rate }, Cmd.none )
 
         SendMessage message ->
             ( { model | message = message }, Cmd.none )

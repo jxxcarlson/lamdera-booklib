@@ -34,10 +34,11 @@ init : ( Model, Cmd BackendMsg )
 init =
     ( { message = "Hello!"
 
-      -- RANDOM
+      -- SYSTEM
       , randomSeed = Random.initialSeed 12034
       , randomAtmosphericInt = Nothing
       , currentTime = Time.millisToPosix 0
+      , taskStatus = TaskWaiting
 
       -- USER
       , authenticationDict = Dict.empty
@@ -57,7 +58,15 @@ update msg model =
             Backend.Update.gotAtomsphericRandomNumber model result
 
         Tick time ->
-            ( { model | currentTime = time }, Cmd.none )
+            let
+                newModel =
+                    if Backend.Update.isUTCTime 13 58 0 time then
+                        Backend.Update.userReadingRates model
+
+                    else
+                        model
+            in
+            ( { newModel | currentTime = time }, Cmd.none )
 
 
 updateFromFrontend : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cmd BackendMsg )

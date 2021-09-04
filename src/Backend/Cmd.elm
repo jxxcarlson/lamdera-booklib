@@ -38,9 +38,16 @@ sendUserData limit username clientId model =
             sendToFrontend clientId (SendMessage "No data!")
 
         Just dataFile ->
-            case limit of
-                Infinity ->
-                    sendToFrontend clientId (GotBooks dataFile.data)
+            let
+                cmd1 =
+                    case limit of
+                        Infinity ->
+                            sendToFrontend clientId (GotBooks dataFile.data)
 
-                Finite n ->
-                    sendToFrontend clientId (GotBooks (List.take n dataFile.data))
+                        Finite n ->
+                            sendToFrontend clientId (GotBooks (List.take n dataFile.data))
+
+                cmd2 =
+                    sendToFrontend clientId (SendReadingRate dataFile.readingRate)
+            in
+            Cmd.batch [ cmd1, cmd2 ]

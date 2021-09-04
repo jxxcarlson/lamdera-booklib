@@ -1,7 +1,9 @@
 module Backend.Update exposing
     ( allUsersSummary
     , gotAtomsphericRandomNumber
+    , isUTCTime
     , setupUser
+    , userReadingRates
     )
 
 import Authentication
@@ -54,7 +56,7 @@ gotAtomsphericRandomNumber model result =
 -- USER
 
 
-userSummary : Model -> Username -> Maybe { name : Username, books : Int, pages : Int, pagesRead : Int }
+userSummary : Model -> Username -> Maybe UserInfo
 userSummary model username =
     case Dict.get username model.dataDict of
         Nothing ->
@@ -67,11 +69,63 @@ userSummary model username =
 
                 pagesRead =
                     List.map .pagesRead dataFile.data |> List.sum
+
+                readingRate =
+                    dataFile.readingRate
             in
-            Just { name = username, books = List.length dataFile.data, pages = pages, pagesRead = pagesRead }
+            Just
+                { name = username
+                , books = List.length dataFile.data
+                , pages = pages
+                , pagesRead = pagesRead
+                , pagesReadToday = dataFile.pagesReadToday
+                , readingRate = readingRate
+                }
 
 
-allUsersSummary : Model -> List { name : Username, books : Int, pages : Int, pagesRead : Int }
+userReadingRates : Model -> Model
+userReadingRates model =
+    let
+        usernames =
+            Dict.keys model.authenticationDict
+    in
+    List.foldl (\username model_ -> userReadingRate username model_) model usernames
+
+
+userReadingRate : Username -> Model -> Model
+userReadingRate username model =
+    case Dict.get username model.dataDict of
+        Nothing ->
+            model
+
+        Just dataFile ->
+            let
+                r =
+                    0.5
+
+                pagesRead1 =
+                    dataFile.pagesRead |> Debug.log "pagesRead1"
+
+                pagesRead =
+                    List.map .pagesRead dataFile.data |> List.sum |> Debug.log "pagesRead2"
+
+                pagesReadToday =
+                    pagesRead - pagesRead1 |> Debug.log "pagesReadToday"
+
+                rate =
+                    if pagesRead1 == 0 then
+                        5.5
+
+                    else
+                        r * toFloat pagesReadToday + (1 - r) * dataFile.readingRate
+
+                newDataFile =
+                    { dataFile | pagesRead = pagesRead, pagesReadToday = pagesReadToday, readingRate = rate }
+            in
+            { model | dataDict = Dict.insert username newDataFile model.dataDict }
+
+
+allUsersSummary : Model -> List UserInfo
 allUsersSummary model =
     List.map (userSummary model) (Dict.keys model.dataDict) |> Maybe.Extra.values
 
@@ -89,7 +143,13 @@ setupUser model clientId username transitPassword =
             Token.get seed
 
         user =
-            { username = username, id = tokenData.token, realname = "Undefined", email = "Undefined", created = model.currentTime, modified = model.currentTime }
+            { username = username
+            , id = tokenData.token
+            , realname = "Undefined"
+            , email = "Undefined"
+            , created = model.currentTime
+            , modified = model.currentTime
+            }
     in
     case Authentication.insert user randomHex transitPassword model.authenticationDict of
         Err str ->
@@ -104,8 +164,8 @@ setupUser model clientId username transitPassword =
             )
 
 
-isUTCTime : Int -> Int -> Time.Posix -> Bool
-isUTCTime hours minutes t =
+isUTCTime : Int -> Int -> Int -> Time.Posix -> Bool
+isUTCTime hours minutes seconds t =
     let
         dt =
             DateTime.fromPosix t
@@ -115,5 +175,8 @@ isUTCTime hours minutes t =
 
         m =
             DateTime.getMinutes dt
+
+        s =
+            DateTime.getSeconds dt
     in
-    h == hours && m == minutes
+    h == hours && m == minutes && s == seconds
