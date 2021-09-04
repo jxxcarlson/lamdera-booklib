@@ -11,7 +11,7 @@ import File exposing (File)
 import Http
 import Random
 import Time
-import Url
+import Urlg
 
 
 type AppMode
