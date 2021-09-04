@@ -7,7 +7,7 @@ import Element
 import Evergreen.V8.Authentication
 import Evergreen.V8.Data
 import Evergreen.V8.User
-import File
+import File exposing (File)
 import Http
 import Random
 import Time
