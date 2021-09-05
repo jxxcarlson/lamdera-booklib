@@ -4,6 +4,7 @@ module Authentication exposing
     , insert
     , users
     , verify
+    , UserData
     )
 
 import Credentials exposing (Credentials)
