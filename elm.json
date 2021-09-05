@@ -36,6 +36,7 @@
             "lamdera/codecs": "1.0.0",
             "lamdera/core": "1.0.0",
             "mdgriffith/elm-ui": "1.1.8",
+            "miniBill/elm-codec": "2.0.0",
             "romariolopezc/elm-hmac-sha1": "3.0.0",
             "rtfeldman/elm-hex": "1.0.0"
         },

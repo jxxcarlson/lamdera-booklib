@@ -1,4 +1,4 @@
-module Codec exposing (decodeData, decodeSpecialData, encodeData)
+module Frontend.Codec exposing (decodeData, decodeSpecialData, encodeData)
 
 import Data exposing (Book)
 import Json.Decode as D

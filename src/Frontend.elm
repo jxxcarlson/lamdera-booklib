@@ -4,7 +4,7 @@ import Authentication
 import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
-import Codec
+import Frontend.Codec
 import Data
 import Element
 import File exposing (File)
@@ -477,7 +477,7 @@ update msg model =
                     ( { model | message = "Cannot import data without a signed-in user" }, Cmd.none )
 
                 Just user ->
-                    case Codec.decodeSpecialData user.username jsonImport of
+                    case Frontend.Codec.decodeSpecialData user.username jsonImport of
                         Err _ ->
                             ( { model | message = "Data read: " ++ (String.fromInt <| String.length jsonImport) ++ ", error importing books" }, Cmd.none )
 
