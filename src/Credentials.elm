@@ -1,4 +1,4 @@
-module Credentials exposing (Credentials, Error, check, generator, hashPw, pregen)
+module Credentials exposing (Credentials(..), Error, check, generator, hashPw, pregen)
 
 import Bytes exposing (Bytes, Endianness(..))
 import Bytes.Encode as Encode exposing (encode, string)
