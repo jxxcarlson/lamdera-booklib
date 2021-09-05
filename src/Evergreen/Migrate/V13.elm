@@ -5,10 +5,12 @@ import Evergreen.V13.Authentication
 import Evergreen.V13.Credentials
 import Evergreen.V13.Data
 import Evergreen.V13.Types as New
+import Evergreen.V13.User
 import Evergreen.V9.Authentication
 import Evergreen.V9.Credentials
 import Evergreen.V9.Data
 import Evergreen.V9.Types as Old
+import Evergreen.V9.User
 import Lamdera.Migrations exposing (..)
 
 
@@ -31,7 +33,7 @@ backendModel old =
           , dataDict = Dict.map (\k v -> transformDataFile v) old.dataDict
 
           -- USER
-          , authenticationDict = Dict.map (\k v -> identAuthData v) old.authenticationDict
+          , authenticationDict = Dict.empty -- Dict.map (\k v -> identUserData v) old.authenticationDict
           }
         , Cmd.none
         )
@@ -49,9 +51,22 @@ transformDataFile old =
     }
 
 
-identAuthData : Evergreen.V9.Authentication.UserData -> Evergreen.V13.Authentication.UserData
-identAuthData old =
-    { user = old.user, credentials = identCredentials old.credentials }
+
+--identUserData : Evergreen.V9.Authentication.UserData -> Evergreen.V13.Authentication.UserData
+--identUserData old =
+--    { user = identUser old.user, credentials = identCredentials old.credentials }
+--
+--
+--
+--identUser : Evergreen.V9.User.User -> Evergreen.V13.User.User
+--identUser old =
+--    { username = old.username
+--    , id = old.id
+--    , realname = old.realname
+--    , email = old.email
+--    , created = old.created
+--    , modified = old.modified
+--    }
 
 
 identCredentials : Evergreen.V9.Credentials.Credentials -> Evergreen.V13.Credentials.Credentials
