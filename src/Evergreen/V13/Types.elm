@@ -136,7 +136,7 @@ type FrontendMsg
     | RandomizedOrder (List Evergreen.V13.Data.Book)
     | ExportJson
     | JsonRequested
-    | JsonSelected File
+    | JsonSelected File.File
     | JsonLoaded String
     | InputTitle String
     | InputSubtitle String
