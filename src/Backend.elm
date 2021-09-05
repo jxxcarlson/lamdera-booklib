@@ -38,7 +38,6 @@ init =
       , randomSeed = Random.initialSeed 12034
       , randomAtmosphericInt = Nothing
       , currentTime = Time.millisToPosix 0
-      , taskStatus = TaskWaiting
 
       -- USER
       , authenticationDict = Dict.empty

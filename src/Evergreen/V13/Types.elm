@@ -1,80 +1,17 @@
-module Types exposing (..)
+module Evergreen.V13.Types exposing (..)
 
-import Authentication exposing (AuthenticationDict)
-import Browser exposing (UrlRequest)
-import Browser.Dom as Dom
-import Browser.Navigation exposing (Key)
-import Data exposing (Book, DataDict, DataId, SortOrder)
+import Browser
+import Browser.Dom
+import Browser.Navigation
 import Element
+import Evergreen.V13.Authentication
+import Evergreen.V13.Data
+import Evergreen.V13.User
 import File exposing (File)
 import Http
-import Markdown
 import Random
 import Time
-import Url exposing (Url)
-import User exposing (User)
-
-
-type alias Username =
-    String
-
-
-type alias FrontendModel =
-    { key : Key
-    , url : Url
-    , message : String
-    , currentTime : Time.Posix
-    , randomSeed : Random.Seed
-    , appMode : AppMode
-
-    -- ADMIN
-    , userData : List UserInfo
-
-    -- USER
-    , currentUser : Maybe User
-    , inputUsername : String
-    , inputPassword : String
-    , readingRate : Float
-
-    -- DATA
-    , snippetText : String
-    , books : List Book
-    , currentBook : Maybe Book
-    , inputBookFilter : String
-    , bookViewMode : BookViewMode
-    , sortOrder : SortOrder
-
-    -- INPUT
-    , inputTitle : String
-    , inputSubtitle : String
-    , inputAuthor : String
-    , inputCategory : String
-    , inputPages : String
-    , inputPagesRead : String
-    , inputNotes : String
-
-    -- UI
-    , windowWidth : Int
-    , windowHeight : Int
-    , popupStatus : PopupStatus
-    , viewMode : ViewMode
-    , device : Element.DeviceClass
-    , bookViewState : BookViewState
-    }
-
-
-type alias BookViewState =
-    { bookId : Maybe String, clicks : Int }
-
-
-type ViewMode
-    = SmallView
-    | LargeView
-
-
-type BookViewMode
-    = SnippetExpanded
-    | SnippetCollapsed
+import Url
 
 
 type AppMode
@@ -83,6 +20,25 @@ type AppMode
     | NewBookMode
     | EditBookMode
     | ViewAboutMode
+
+
+type alias Username =
+    String
+
+
+type alias UserInfo =
+    { name : Username
+    , books : Int
+    , pages : Int
+    , pagesRead : Int
+    , pagesReadToday : Int
+    , readingRate : Float
+    }
+
+
+type BookViewMode
+    = SnippetExpanded
+    | SnippetCollapsed
 
 
 type PopupWindow
@@ -94,43 +50,74 @@ type PopupStatus
     | PopupClosed
 
 
-type alias BackendModel =
-    { message : String
+type ViewMode
+    = SmallView
+    | LargeView
 
-    -- SYSTEM
-    , randomSeed : Random.Seed
-    , randomAtmosphericInt : Maybe Int
-    , currentTime : Time.Posix
 
-    -- DATA
-    , dataDict : DataDict
-
-    -- USER
-    , authenticationDict : AuthenticationDict
+type alias BookViewState =
+    { bookId : Maybe String
+    , clicks : Int
     }
 
 
-type TaskStatus
-    = TaskWaiting
-    | TaskRunning
+type alias FrontendModel =
+    { key : Browser.Navigation.Key
+    , url : Url.Url
+    , message : String
+    , currentTime : Time.Posix
+    , randomSeed : Random.Seed
+    , appMode : AppMode
+    , userData : List UserInfo
+    , currentUser : Maybe Evergreen.V13.User.User
+    , inputUsername : String
+    , inputPassword : String
+    , readingRate : Float
+    , snippetText : String
+    , books : List Evergreen.V13.Data.Book
+    , currentBook : Maybe Evergreen.V13.Data.Book
+    , inputBookFilter : String
+    , bookViewMode : BookViewMode
+    , sortOrder : Evergreen.V13.Data.SortOrder
+    , inputTitle : String
+    , inputSubtitle : String
+    , inputAuthor : String
+    , inputCategory : String
+    , inputPages : String
+    , inputPagesRead : String
+    , inputNotes : String
+    , windowWidth : Int
+    , windowHeight : Int
+    , popupStatus : PopupStatus
+    , viewMode : ViewMode
+    , device : Element.DeviceClass
+    , bookViewState : BookViewState
+    }
+
+
+type alias BackendModel =
+    { message : String
+    , randomSeed : Random.Seed
+    , randomAtmosphericInt : Maybe Int
+    , currentTime : Time.Posix
+    , dataDict : Evergreen.V13.Data.DataDict
+    , authenticationDict : Evergreen.V13.Authentication.AuthenticationDict
+    }
 
 
 type FrontendMsg
-    = UrlClicked UrlRequest
-    | UrlChanged Url
-    | GotViewport Dom.Viewport
+    = UrlClicked Browser.UrlRequest
+    | UrlChanged Url.Url
+    | GotViewport Browser.Dom.Viewport
     | NoOpFrontendMsg
     | FETick Time.Posix
     | GotAtomsphericRandomNumberFE (Result Http.Error String)
-      -- UI
     | GotNewWindowDimensions Int Int
     | ChangePopupStatus PopupStatus
-      -- USER
     | SignIn
     | SignOut
     | InputUsername String
     | InputPassword String
-      -- DATA
     | InputSnippet String
     | SearchBy String
     | StarSnippet
@@ -139,19 +126,18 @@ type FrontendMsg
     | Fetch
     | About
     | Close
-    | Edit Book
-    | ViewContent Book
+    | Edit Evergreen.V13.Data.Book
+    | ViewContent Evergreen.V13.Data.Book
     | Delete
     | InputSnippetFilter String
-    | ExpandContractItem Book
-    | SetSortOrder SortOrder
-    | SetCurrentBook (Maybe Book)
-    | RandomizedOrder (List Book)
+    | ExpandContractItem Evergreen.V13.Data.Book
+    | SetSortOrder Evergreen.V13.Data.SortOrder
+    | SetCurrentBook (Maybe Evergreen.V13.Data.Book)
+    | RandomizedOrder (List Evergreen.V13.Data.Book)
     | ExportJson
     | JsonRequested
     | JsonSelected File
     | JsonLoaded String
-      --
     | InputTitle String
     | InputSubtitle String
     | InputAuthor String
@@ -159,26 +145,21 @@ type FrontendMsg
     | InputPages String
     | InputPagesRead String
     | InputNotes String
-      -- UI
     | ExpandContractView
     | SetAppMode AppMode
-      -- ADMIN
     | AdminRunTask
     | GetAllUserData
 
 
 type ToBackend
     = NoOpToBackend
-      -- ADMIN
     | RunTask
     | SendAllUserData
-      -- DATA
-    | SaveDatum Username Book
-    | SaveData Username (List Book)
+    | SaveDatum Username Evergreen.V13.Data.Book
+    | SaveData Username (List Evergreen.V13.Data.Book)
     | SendUserData Username
-    | UpdateDatum Username Book
-    | DeleteBookFromStore Username DataId
-      -- USER
+    | UpdateDatum Username Evergreen.V13.Data.Book
+    | DeleteBookFromStore Username Evergreen.V13.Data.DataId
     | SignInOrSignUp String String
 
 
@@ -188,22 +169,10 @@ type BackendMsg
     | Tick Time.Posix
 
 
-type alias UserInfo =
-    { name : Username, books : Int, pages : Int, pagesRead : Int, pagesReadToday : Int, readingRate : Float }
-
-
 type ToFrontend
     = NoOpToFrontend
     | SendMessage String
-      -- ADMIN
     | GotAllUserData (List UserInfo)
-      -- DATA
-    | GotBooks (List Book)
-      -- USER
-    | SendUser User
+    | GotBooks (List Evergreen.V13.Data.Book)
+    | SendUser Evergreen.V13.User.User
     | SendReadingRate Float
-
-
-type ExtendedInteger
-    = Finite Int
-    | Infinity
