@@ -159,16 +159,6 @@ type FrontendMsg
     | DownloadBackup
 
 
-type alias BackendModel =
-    { message : String
-    , randomSeed : Random.Seed
-    , randomAtmosphericInt : Maybe Int
-    , currentTime : Time.Posix
-    , dataDict : Evergreen.V13.Data.DataDict
-    , authenticationDict : Evergreen.V13.Authentication.AuthenticationDict
-    }
-
-
 type ToBackend
     = NoOpToBackend
     | RunTask
