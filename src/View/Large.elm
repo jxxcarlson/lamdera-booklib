@@ -134,14 +134,19 @@ lhsHeader model ratioBooks ratioPages rate =
             [ E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioBooks)
             , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
-            , View.Utility.showIf (model.appMode == ViewBooksMode)
+            , View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Today: " ++ String.fromInt model.pagesReadToday ++ " pp"))
-            , View.Utility.showIf (model.appMode == ViewBooksMode)
+            , View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate)))
-            , View.Utility.showIf (model.appMode == ViewBooksMode)
+            , View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
             ]
         ]
+
+
+userIsAdmin : Model -> Bool
+userIsAdmin model =
+    Maybe.map .username model.currentUser == Just "jxxcarlson"
 
 
 rhs model =
@@ -304,9 +309,9 @@ footer model =
         , Font.size 14
         , E.inFront (View.AdminPopup.admin model)
         ]
-        [ View.Utility.hideIf (model.currentUser == Nothing) (Button.adminPopup model)
+        [ View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") (Button.adminPopup model)
         , View.Utility.hideIf (model.currentUser == Nothing) Button.exportJson
-        , View.Utility.hideIf (model.currentUser == Nothing) Button.importJson
+        , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.importJson
         , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.backupBackendModel
         , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
         , messageRow model
