@@ -113,11 +113,6 @@ type alias BackendModel =
     }
 
 
-type TaskStatus
-    = TaskWaiting
-    | TaskRunning
-
-
 type FrontendMsg
     = UrlClicked UrlRequest
     | UrlChanged Url

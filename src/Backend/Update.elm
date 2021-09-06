@@ -114,6 +114,18 @@ userReadingRate username model =
 
         Just dataFile ->
             let
+                r =
+                    0.5
+
+                pagesRead1 =
+                    dataFile.pagesRead
+
+                pagesRead =
+                    List.map .pagesRead dataFile.data |> List.sum
+
+                pagesReadToday =
+                    pagesRead - pagesRead1
+
                 rate =
                     currentReadingRate dataFile.pagesReadToday dataFile.readingRate
 
