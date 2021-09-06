@@ -90,7 +90,11 @@ readingRateFactor =
 
 currentReadingRate : Int -> Float -> Float
 currentReadingRate pagesReadToday readingRate =
-    readingRateFactor * (toFloat <| pagesReadToday) + (1 - readingRateFactor) * (readingRate |> Debug.log "XX1, RR before") |> Debug.log "XX1: RR after"
+    if readingRate < 0.01 then
+        toFloat pagesReadToday
+
+    else
+        readingRateFactor * (toFloat <| pagesReadToday) + (1 - readingRateFactor) * readingRate
 
 
 userReadingRates : Model -> Model
