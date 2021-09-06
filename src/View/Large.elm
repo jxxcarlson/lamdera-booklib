@@ -83,23 +83,30 @@ signedInLhs model =
         percentRead =
             100 * toFloat totalPagesRead / toFloat totalPagesInBooks |> round
 
+        rawNumberOfBooks =
+            List.length model.books
+
         numberOfBooks =
-            String.fromInt (List.length model.books)
+            String.fromInt rawNumberOfBooks
 
         numberOfFilteredBooks =
             String.fromInt (List.length filteredBooks)
 
         ratioPages =
-            "Pages: "
-                ++ String.fromInt totalPagesRead
-                ++ " : "
-                ++ String.fromInt totalPagesInBooks
-                ++ " ("
-                ++ String.fromInt percentRead
-                ++ "%)"
+            if rawNumberOfBooks > 0 then
+                "Pages: "
+                    ++ String.fromInt totalPagesRead
+                    ++ ":"
+                    ++ String.fromInt totalPagesInBooks
+                    ++ " ("
+                    ++ String.fromInt percentRead
+                    ++ "%)"
+
+            else
+                ""
 
         ratioBooks =
-            "Books: " ++ numberOfFilteredBooks ++ "/" ++ numberOfBooks
+            "Books: " ++ numberOfFilteredBooks ++ ":" ++ numberOfBooks
 
         rate =
             "Rate: " ++ (String.fromFloat <| Util.roundTo 2 model.readingRate)
