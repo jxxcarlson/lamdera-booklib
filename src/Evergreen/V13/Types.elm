@@ -7,7 +7,7 @@ import Element
 import Evergreen.V13.Authentication
 import Evergreen.V13.Data
 import Evergreen.V13.User
-import File exposing (File)
+import File
 import Http
 import Random
 import Time
@@ -94,6 +94,16 @@ type alias FrontendModel =
     , viewMode : ViewMode
     , device : Element.DeviceClass
     , bookViewState : BookViewState
+    }
+
+
+type alias BackendModel =
+    { message : String
+    , randomSeed : Random.Seed
+    , randomAtmosphericInt : Maybe Int
+    , currentTime : Time.Posix
+    , dataDict : Evergreen.V13.Data.DataDict
+    , authenticationDict : Evergreen.V13.Authentication.AuthenticationDict
     }
 
 
