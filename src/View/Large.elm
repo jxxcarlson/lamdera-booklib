@@ -92,7 +92,7 @@ signedInLhs model =
         ratioPages =
             "Pages: "
                 ++ String.fromInt totalPagesRead
-                ++ "/"
+                ++ " : "
                 ++ String.fromInt totalPagesInBooks
                 ++ " ("
                 ++ String.fromInt percentRead
@@ -135,22 +135,13 @@ lhsHeader model ratioBooks ratioPages rate =
             , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
             , View.Utility.showIf (model.appMode == ViewBooksMode)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text rate))
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Today: " ++ String.fromInt model.pagesReadToday ++ " pp"))
             , View.Utility.showIf (model.appMode == ViewBooksMode)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text (pagesReadToday model)))
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate)))
             , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
             ]
         ]
-
-
-pagesReadToday model =
-    case model.currentUser of
-        Nothing ->
-            "-"
-
-        Just user ->
-            "Today: " ++ String.fromInt user.pagesReadToday ++ "pp"
 
 
 rhs model =

@@ -41,6 +41,7 @@ type alias DataFile =
 type alias DataDict =
     Dict Username DataFile
 
+
 type alias Book =
     { id : String
     , username : String
@@ -93,7 +94,6 @@ make username currentTime id title author pages =
     , pagesReadToday = 0
     , averageReadingRate = 0
     }
-
 
 
 transformer { title, category, author, creationDate } =

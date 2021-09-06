@@ -5,7 +5,7 @@ import Browser exposing (UrlRequest)
 import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
 import Codec
-import Data exposing (Book, DataDict, DataId, SortOrder)
+import Data exposing (Book, DataDict, DataFile, DataId, SortOrder)
 import Element
 import File exposing (File)
 import Http
@@ -35,7 +35,6 @@ type alias FrontendModel =
     , currentUser : Maybe User
     , inputUsername : String
     , inputPassword : String
-    , readingRate : Float
 
     -- DATA
     , snippetText : String
@@ -44,6 +43,9 @@ type alias FrontendModel =
     , inputBookFilter : String
     , bookViewMode : BookViewMode
     , sortOrder : SortOrder
+    , pagesRead : Int
+    , pagesReadToday : Int
+    , readingRate : Float
 
     -- INPUT
     , inputTitle : String
@@ -208,7 +210,7 @@ type ToFrontend
     | GotAllUserData (List UserInfo)
     | GotBackup String
       -- DATA
-    | GotBooks (List Book)
+    | GotData DataFile
       -- USER
     | SendUser User
     | SendReadingRate Float

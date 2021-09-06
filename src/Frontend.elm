@@ -63,8 +63,6 @@ init url key =
       , userData = []
 
       -- USER
-      , readingRate = 0
-
       -- UI
       , windowWidth = 1200
       , windowHeight = 900
@@ -78,6 +76,9 @@ init url key =
       , inputBookFilter = ""
       , bookViewMode = SnippetCollapsed
       , sortOrder = Data.SortByMostRecent
+      , pagesRead = 0
+      , pagesReadToday = 0
+      , readingRate = 0
 
       -- USER
       , currentUser = Nothing
@@ -548,12 +549,12 @@ updateFromBackend msg model =
             ( model, Frontend.Cmd.downloadBackup str )
 
         -- DATA
-        GotBooks dataList ->
+        GotData dataFile ->
             let
                 books =
-                    List.sortBy (\snip -> -(Time.posixToMillis snip.creationDate)) dataList
+                    List.sortBy (\snip -> -(Time.posixToMillis snip.creationDate)) dataFile.data
 
-                currentSnippet =
+                currentBook =
                     case List.head books of
                         Nothing ->
                             Nothing
@@ -561,7 +562,15 @@ updateFromBackend msg model =
                         Just snippet ->
                             Just snippet
             in
-            ( { model | books = books, currentBook = currentSnippet }, Cmd.none )
+            ( { model
+                | books = books
+                , currentBook = currentBook
+                , pagesRead = dataFile.pagesRead
+                , pagesReadToday = dataFile.pagesReadToday
+                , readingRate = dataFile.readingRate
+              }
+            , Cmd.none
+            )
 
         -- USER
         SendUser user ->

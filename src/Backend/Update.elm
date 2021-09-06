@@ -1,5 +1,6 @@
 module Backend.Update exposing
     ( allUsersSummary
+    , currentReadingRate
     , gotAtomsphericRandomNumber
     , isUTCTime
     , setupUser
@@ -83,6 +84,15 @@ userSummary model username =
                 }
 
 
+readingRateFactor =
+    0.5
+
+
+currentReadingRate : Int -> Float -> Float
+currentReadingRate pagesReadToday readingRate =
+    readingRateFactor * (toFloat <| pagesReadToday) + (1 - readingRateFactor) * (readingRate |> Debug.log "XX1, RR before") |> Debug.log "XX1: RR after"
+
+
 userReadingRates : Model -> Model
 userReadingRates model =
     let
@@ -100,27 +110,11 @@ userReadingRate username model =
 
         Just dataFile ->
             let
-                r =
-                    0.5
-
-                pagesRead1 =
-                    dataFile.pagesRead
-
-                pagesRead =
-                    List.map .pagesRead dataFile.data |> List.sum
-
-                pagesReadToday =
-                    pagesRead - pagesRead1
-
                 rate =
-                    if pagesRead1 == 0 then
-                        5.5
-
-                    else
-                        r * toFloat pagesReadToday + (1 - r) * dataFile.readingRate
+                    currentReadingRate dataFile.pagesReadToday dataFile.readingRate
 
                 newDataFile =
-                    { dataFile | pagesRead = pagesRead, pagesReadToday = pagesReadToday, readingRate = rate }
+                    { dataFile | pagesReadToday = 0, readingRate = rate }
             in
             { model | dataDict = Dict.insert username newDataFile model.dataDict }
 

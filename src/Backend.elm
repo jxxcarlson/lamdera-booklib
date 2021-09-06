@@ -61,7 +61,7 @@ update msg model =
         Tick time ->
             let
                 newModel =
-                    if Backend.Update.isUTCTime 13 58 0 time then
+                    if Backend.Update.isUTCTime 20 18 0 time then
                         Backend.Update.userReadingRates model
 
                     else
@@ -128,23 +128,20 @@ updateFromFrontend sessionId clientId msg model =
                         newData =
                             List.Extra.setIf (\b -> b.id == book.id) book dataFile.data
 
+                        newDataFile =
+                            { dataFile
+                                | data = newData
+                                , pagesReadToday = dataFile.pagesReadToday + deltaPagesReadToday
+                                , pagesRead = dataFile.pagesRead + deltaPagesReadToday
+                            }
+
                         newDataDict =
-                            Dict.insert user.username { dataFile | data = newData } model.dataDict
-
-                        userUpdater : Int -> User.User -> User.User
-                        userUpdater delta user_ =
-                            { user_ | pagesReadToday = user.pagesReadToday + delta } |> Debug.log "USER"
-
-                        newUser =
-                            userUpdater deltaPagesReadToday user |> Debug.log "NEWUSER"
-
-                        newAuthDict =
-                            Authentication.updateUser (userUpdater deltaPagesReadToday) user model.authenticationDict
+                            Dict.insert user.username newDataFile model.dataDict
                     in
-                    ( { model | dataDict = newDataDict, authenticationDict = newAuthDict }
+                    ( { model | dataDict = newDataDict }
                     , Cmd.batch
                         [ sendToFrontend clientId (SendMessage <| "Pages read: " ++ (String.fromInt <| user.pagesReadToday + deltaPagesReadToday))
-                        , sendToFrontend clientId (SendUser newUser)
+                        , sendToFrontend clientId (GotData newDataFile)
                         ]
                     )
 
@@ -159,7 +156,7 @@ updateFromFrontend sessionId clientId msg model =
                     ( model, sendToFrontend clientId (SendMessage "No data!") )
 
                 Just dataFile ->
-                    ( model, sendToFrontend clientId (GotBooks dataFile.data) )
+                    ( model, sendToFrontend clientId (GotData dataFile) )
 
         SendAllUserData ->
             ( model, sendToFrontend clientId (GotAllUserData (Backend.Update.allUsersSummary model)) )
@@ -176,7 +173,7 @@ updateFromFrontend sessionId clientId msg model =
                                     "Success! Random atmospheric integer: "
                                         ++ (Maybe.map String.fromInt model.randomAtmosphericInt |> Maybe.withDefault "NONE")
                                 )
-                            , Backend.Cmd.sendUserData Infinity username clientId model
+                            , Backend.Cmd.sendUserData username clientId model
                             , sendToFrontend clientId (SendUser userData.user)
                             ]
                         )
