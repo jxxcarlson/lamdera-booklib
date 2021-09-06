@@ -33,7 +33,7 @@ backendModel old =
           , dataDict = Dict.map (\k v -> transformDataFile v) old.dataDict
 
           -- USER
-          , authenticationDict = Dict.map (\k v -> identUserData v) old.authenticationDict
+          , authenticationDict = Dict.map (\k v -> transformUserData v) old.authenticationDict
           }
         , Cmd.none
         )
@@ -51,21 +51,20 @@ transformDataFile old =
     }
 
 
-
-identUserData : Evergreen.V9.Authentication.UserData -> Evergreen.V13.Authentication.UserData
-identUserData old =
-    { user = identUser old.user, credentials = identCredentials old.credentials }
-
+transformUserData : Evergreen.V9.Authentication.UserData -> Evergreen.V13.Authentication.UserData
+transformUserData old =
+    { user = transformUser old.user, credentials = identCredentials old.credentials }
 
 
-identUser : Evergreen.V9.User.User -> Evergreen.V13.User.User
-identUser old =
+transformUser : Evergreen.V9.User.User -> Evergreen.V13.User.User
+transformUser old =
     { username = old.username
     , id = old.id
     , realname = old.realname
     , email = old.email
     , created = old.created
     , modified = old.modified
+    , pagesReadToday = 0
     }
 
 

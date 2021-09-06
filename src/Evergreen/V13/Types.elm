@@ -72,13 +72,15 @@ type alias FrontendModel =
     , currentUser : Maybe Evergreen.V13.User.User
     , inputUsername : String
     , inputPassword : String
-    , readingRate : Float
     , snippetText : String
     , books : List Evergreen.V13.Data.Book
     , currentBook : Maybe Evergreen.V13.Data.Book
     , inputBookFilter : String
     , bookViewMode : BookViewMode
     , sortOrder : Evergreen.V13.Data.SortOrder
+    , pagesRead : Int
+    , pagesReadToday : Int
+    , readingRate : Float
     , inputTitle : String
     , inputSubtitle : String
     , inputAuthor : String
@@ -103,6 +105,11 @@ type alias BackendModel =
     , dataDict : Evergreen.V13.Data.DataDict
     , authenticationDict : Evergreen.V13.Authentication.AuthenticationDict
     }
+
+
+type JsonRequestType
+    = BackupOne
+    | BackupAll
 
 
 type FrontendMsg
@@ -135,9 +142,9 @@ type FrontendMsg
     | SetCurrentBook (Maybe Evergreen.V13.Data.Book)
     | RandomizedOrder (List Evergreen.V13.Data.Book)
     | ExportJson
-    | JsonRequested
-    | JsonSelected File.File
-    | JsonLoaded String
+    | JsonRequested JsonRequestType
+    | JsonSelected JsonRequestType File.File
+    | JsonLoaded JsonRequestType String
     | InputTitle String
     | InputSubtitle String
     | InputAuthor String
@@ -149,16 +156,29 @@ type FrontendMsg
     | SetAppMode AppMode
     | AdminRunTask
     | GetAllUserData
+    | DownloadBackup
+
+
+type alias BackendModel =
+    { message : String
+    , randomSeed : Random.Seed
+    , randomAtmosphericInt : Maybe Int
+    , currentTime : Time.Posix
+    , dataDict : Evergreen.V13.Data.DataDict
+    , authenticationDict : Evergreen.V13.Authentication.AuthenticationDict
+    }
 
 
 type ToBackend
     = NoOpToBackend
     | RunTask
     | SendAllUserData
+    | EncodeBackendModel
+    | RestoreBackup BackendModel
     | SaveDatum Username Evergreen.V13.Data.Book
     | SaveData Username (List Evergreen.V13.Data.Book)
     | SendUserData Username
-    | UpdateDatum Username Evergreen.V13.Data.Book
+    | UpdateDatum Evergreen.V13.User.User Int Evergreen.V13.Data.Book
     | DeleteBookFromStore Username Evergreen.V13.Data.DataId
     | SignInOrSignUp String String
 
@@ -173,6 +193,7 @@ type ToFrontend
     = NoOpToFrontend
     | SendMessage String
     | GotAllUserData (List UserInfo)
-    | GotBooks (List Evergreen.V13.Data.Book)
+    | GotBackup String
+    | GotData Evergreen.V13.Data.DataFile
     | SendUser Evergreen.V13.User.User
     | SendReadingRate Float
