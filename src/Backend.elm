@@ -1,6 +1,7 @@
 module Backend exposing (..)
 
 import Authentication
+import Backend.Backup
 import Backend.Cmd
 import Backend.Update
 import Data
@@ -77,6 +78,9 @@ updateFromFrontend sessionId clientId msg model =
         -- ADMIN
         RunTask ->
             ( model, Cmd.none )
+
+        EncodeBackendModel ->
+            ( model, sendToFrontend clientId (GotBackup (Backend.Backup.encodeBackup model)) )
 
         -- DATA
         SaveDatum username datum ->

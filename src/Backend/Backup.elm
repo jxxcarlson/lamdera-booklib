@@ -1,4 +1,4 @@
-module Backend.Backup exposing (backupCodec)
+module Backend.Backup exposing (decodeBackup, encodeBackup)
 
 import Codec exposing(Codec)
 import Data
@@ -6,6 +6,34 @@ import Authentication
 import Credentials
 import Time
 import User
+import Types exposing (BackendModel)
+import Random
+
+
+encodeBackup: BackendModel -> String
+encodeBackup model =
+  let
+      backup = {authenticationDict = model.authenticationDict, dataDict = model.dataDict}
+  in
+  Codec.encodeToString 4 backupCodec backup
+
+
+decodeBackup : String -> Result Codec.Error BackendModel
+decodeBackup str =
+    let
+        result = Codec.decodeString backupCodec str
+    in
+    case result of
+        Ok backup ->
+             Ok { message = "backup "
+                , randomSeed = Random.initialSeed 876543
+                , randomAtmosphericInt = Nothing
+                , currentTime = Time.millisToPosix 0
+                , dataDict = backup.dataDict
+                , authenticationDict = backup.authenticationDict
+                }
+        Err x -> Err x
+
 
 type alias Backup =
     { dataDict : Data.DataDict

@@ -305,6 +305,7 @@ footer model =
         [ View.Utility.hideIf (model.currentUser == Nothing) (Button.adminPopup model)
         , View.Utility.hideIf (model.currentUser == Nothing) Button.exportJson
         , View.Utility.hideIf (model.currentUser == Nothing) Button.importJson
+        , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.backupBackendModel
         , messageRow model
         ]
 

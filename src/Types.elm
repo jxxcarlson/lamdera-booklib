@@ -165,6 +165,7 @@ type FrontendMsg
       -- ADMIN
     | AdminRunTask
     | GetAllUserData
+    | DownloadBackup
 
 
 type ToBackend
@@ -172,6 +173,7 @@ type ToBackend
       -- ADMIN
     | RunTask
     | SendAllUserData
+    | EncodeBackendModel
       -- DATA
     | SaveDatum Username Book
     | SaveData Username (List Book)
@@ -197,6 +199,7 @@ type ToFrontend
     | SendMessage String
       -- ADMIN
     | GotAllUserData (List UserInfo)
+    | GotBackup String
       -- DATA
     | GotBooks (List Book)
       -- USER

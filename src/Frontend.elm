@@ -4,12 +4,12 @@ import Authentication
 import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
-import Frontend.Codec
 import Data
 import Element
 import File exposing (File)
 import File.Select as Select
 import Frontend.Cmd
+import Frontend.Codec
 import Frontend.Update
 import Html exposing (Html)
 import Lamdera exposing (sendToBackend)
@@ -512,6 +512,9 @@ update msg model =
         GetAllUserData ->
             ( model, sendToBackend SendAllUserData )
 
+        DownloadBackup ->
+            ( model, sendToBackend EncodeBackendModel )
+
 
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
 updateFromBackend msg model =
@@ -522,6 +525,9 @@ updateFromBackend msg model =
         -- ADMIN
         GotAllUserData userData ->
             ( { model | userData = userData }, Cmd.none )
+
+        GotBackup str ->
+            ( model, Frontend.Cmd.downloadBackup str )
 
         -- DATA
         GotBooks dataList ->

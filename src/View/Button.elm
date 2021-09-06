@@ -1,6 +1,7 @@
 module View.Button exposing
     ( about
     , adminPopup
+    , backupBackendModel
     , cancelAbout
     , delete
     , editItem
@@ -217,6 +218,11 @@ expandCollapseView viewMode =
 
 
 -- ADMIN
+
+
+backupBackendModel : Element FrontendMsg
+backupBackendModel =
+    buttonTemplate [] DownloadBackup "Download Backup"
 
 
 runTask : Element FrontendMsg
