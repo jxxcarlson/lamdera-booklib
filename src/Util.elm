@@ -1,7 +1,24 @@
-module Util exposing (comparePosix, ifApply, insertInList, roundTo)
+module Util exposing
+    ( comparePosix
+    , ifApply
+    , insertInList
+    , liftToMaybe
+    , roundTo
+    )
 
 import List.Extra
 import Time
+
+
+liftToMaybe : (a -> b) -> (Maybe a -> Maybe b)
+liftToMaybe f =
+    \a ->
+        case a of
+            Nothing ->
+                Nothing
+
+            Just a_ ->
+                Just (f a_)
 
 
 comparePosix : Time.Posix -> Time.Posix -> Order

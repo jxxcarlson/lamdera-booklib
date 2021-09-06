@@ -1,6 +1,8 @@
 module Frontend exposing (..)
 
 import Authentication
+import Backend.Backup
+import Backend.RestorePrevious
 import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
@@ -383,6 +385,7 @@ update msg model =
                                                 , category = model.inputCategory
                                                 , pagesRead = pagesRead
                                                 , pages = pages
+                                                , pagesReadToday = pagesRead - book.pagesRead + book.pagesReadToday
                                                 , modificationDate = model.currentTime
                                             }
 
@@ -394,7 +397,7 @@ update msg model =
                                         , currentBook = Just newBook
                                         , appMode = ViewBooksMode
                                       }
-                                    , sendToBackend (UpdateDatum user.username newBook)
+                                    , sendToBackend (UpdateDatum user (pagesRead - book.pagesRead) newBook)
                                     )
 
         Close ->
@@ -465,26 +468,41 @@ update msg model =
             , Cmd.none
             )
 
-        JsonRequested ->
-            ( model, Select.file [ "text/json" ] JsonSelected )
+        JsonRequested jsonRequestType ->
+            ( model, Select.file [ "text/json" ] (JsonSelected jsonRequestType) )
 
-        JsonSelected file ->
-            ( model, Task.perform JsonLoaded (File.toString file) )
+        JsonSelected jsonRequestType file ->
+            case jsonRequestType of
+                BackupOne ->
+                    ( model, Task.perform (JsonLoaded jsonRequestType) (File.toString file) )
 
-        JsonLoaded jsonImport ->
-            case model.currentUser of
-                Nothing ->
-                    ( { model | message = "Cannot import data without a signed-in user" }, Cmd.none )
+                BackupAll ->
+                    ( model, Task.perform (JsonLoaded jsonRequestType) (File.toString file) )
 
-                Just user ->
-                    case Frontend.Codec.decodeSpecialData user.username jsonImport of
+        JsonLoaded jsonRequestType jsonImport ->
+            case jsonRequestType of
+                BackupOne ->
+                    case model.currentUser of
+                        Nothing ->
+                            ( { model | message = "Cannot import data without a signed-in user" }, Cmd.none )
+
+                        Just user ->
+                            case Frontend.Codec.decodeSpecialData user.username jsonImport of
+                                Err _ ->
+                                    ( { model | message = "Data read: " ++ (String.fromInt <| String.length jsonImport) ++ ", error importing books" }, Cmd.none )
+
+                                Ok books ->
+                                    ( { model | books = books ++ model.books, message = "imported: " ++ (String.fromInt <| List.length books) }
+                                    , sendToBackend (SaveData user.username books)
+                                    )
+
+                BackupAll ->
+                    case Backend.RestorePrevious.decodeBackup jsonImport of
                         Err _ ->
-                            ( { model | message = "Data read: " ++ (String.fromInt <| String.length jsonImport) ++ ", error importing books" }, Cmd.none )
+                            ( { model | message = "Error decoding backup" }, Cmd.none )
 
-                        Ok books ->
-                            ( { model | books = books ++ model.books, message = "imported: " ++ (String.fromInt <| List.length books) }
-                            , sendToBackend (SaveData user.username books)
-                            )
+                        Ok backendModel ->
+                            ( { model | message = "restoring backup ..." }, sendToBackend (RestoreBackup backendModel) )
 
         ExportJson ->
             ( model, Frontend.Cmd.exportJson model )

@@ -4,6 +4,7 @@ import Authentication exposing (AuthenticationDict)
 import Browser exposing (UrlRequest)
 import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
+import Codec
 import Data exposing (Book, DataDict, DataId, SortOrder)
 import Element
 import File exposing (File)
@@ -148,9 +149,9 @@ type FrontendMsg
     | SetCurrentBook (Maybe Book)
     | RandomizedOrder (List Book)
     | ExportJson
-    | JsonRequested
-    | JsonSelected File
-    | JsonLoaded String
+    | JsonRequested JsonRequestType
+    | JsonSelected JsonRequestType File
+    | JsonLoaded JsonRequestType String
       --
     | InputTitle String
     | InputSubtitle String
@@ -168,17 +169,23 @@ type FrontendMsg
     | DownloadBackup
 
 
+type JsonRequestType
+    = BackupOne
+    | BackupAll
+
+
 type ToBackend
     = NoOpToBackend
       -- ADMIN
     | RunTask
     | SendAllUserData
     | EncodeBackendModel
+    | RestoreBackup BackendModel
       -- DATA
     | SaveDatum Username Book
     | SaveData Username (List Book)
     | SendUserData Username
-    | UpdateDatum Username Book
+    | UpdateDatum User Int Book
     | DeleteBookFromStore Username DataId
       -- USER
     | SignInOrSignUp String String

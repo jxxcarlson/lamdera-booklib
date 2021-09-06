@@ -13,6 +13,7 @@ module View.Button exposing
     , importJson
     , linkTemplate
     , new
+    , restoreBackendBackup
     , runTask
     , save
     , searchByStarred
@@ -176,7 +177,12 @@ exportJson =
 
 importJson : Element FrontendMsg
 importJson =
-    buttonTemplate [] JsonRequested "Import"
+    buttonTemplate [] (JsonRequested BackupOne) "Import"
+
+
+restoreBackendBackup : Element FrontendMsg
+restoreBackendBackup =
+    buttonTemplate [] (JsonRequested BackupAll) "Restore Backend Model"
 
 
 expandCollapse datum =

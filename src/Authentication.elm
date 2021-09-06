@@ -1,10 +1,11 @@
 module Authentication exposing
     ( AuthenticationDict
+    , UserData
     , encryptForTransit
     , insert
+    , updateUser
     , users
     , verify
-    , UserData
     )
 
 import Credentials exposing (Credentials)
@@ -12,6 +13,7 @@ import Crypto.HMAC exposing (sha256)
 import Dict exposing (Dict)
 import Env
 import User exposing (User)
+import Util
 
 
 type alias Username =
@@ -24,6 +26,16 @@ type alias UserData =
 
 type alias AuthenticationDict =
     Dict Username UserData
+
+
+updateUser : (User -> User) -> User -> AuthenticationDict -> AuthenticationDict
+updateUser userUpdater user authDict =
+    let
+        userDataUpdater : UserData -> UserData
+        userDataUpdater userData =
+            { userData | user = userUpdater user }
+    in
+    Dict.update user.username (Util.liftToMaybe userDataUpdater) authDict
 
 
 users : AuthenticationDict -> List User

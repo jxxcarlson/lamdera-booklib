@@ -137,9 +137,20 @@ lhsHeader model ratioBooks ratioPages rate =
             , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text rate))
             , View.Utility.showIf (model.appMode == ViewBooksMode)
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text (pagesReadToday model)))
+            , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
             ]
         ]
+
+
+pagesReadToday model =
+    case model.currentUser of
+        Nothing ->
+            "-"
+
+        Just user ->
+            "Today: " ++ String.fromInt user.pagesReadToday ++ "pp"
 
 
 rhs model =
@@ -306,6 +317,7 @@ footer model =
         , View.Utility.hideIf (model.currentUser == Nothing) Button.exportJson
         , View.Utility.hideIf (model.currentUser == Nothing) Button.importJson
         , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.backupBackendModel
+        , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
         , messageRow model
         ]
 

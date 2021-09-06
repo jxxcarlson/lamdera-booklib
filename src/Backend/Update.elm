@@ -149,6 +149,7 @@ setupUser model clientId username transitPassword =
             , email = "Undefined"
             , created = model.currentTime
             , modified = model.currentTime
+            , pagesReadToday = 0
             }
     in
     case Authentication.insert user randomHex transitPassword model.authenticationDict of

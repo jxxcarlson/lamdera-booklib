@@ -1,4 +1,4 @@
-module Backend.Backup exposing (Backup, decodeBackup, encodeBackup)
+module Backend.RestorePrevious exposing (decodeBackup)
 
 import Authentication
 import Codec exposing (Codec)
@@ -8,6 +8,16 @@ import Random
 import Time
 import Types exposing (BackendModel)
 import User
+
+
+type alias OldUser =
+    { username : String
+    , id : String
+    , realname : String
+    , email : String
+    , created : Time.Posix
+    , modified : Time.Posix
+    }
 
 
 type alias Backup =
@@ -57,17 +67,39 @@ authenticationDictCodec =
     Codec.dict userDataCodec
 
 
-userCodec : Codec User.User
-userCodec =
-    Codec.object User.User
+oldUserCodec : Codec OldUser
+oldUserCodec =
+    Codec.object OldUser
         |> Codec.field "username" .username Codec.string
         |> Codec.field "id" .id Codec.string
         |> Codec.field "realname" .realname Codec.string
         |> Codec.field "email" .email Codec.string
         |> Codec.field "created" .created posixCodec
         |> Codec.field "modified" .modified posixCodec
-        |> Codec.field "pagesReadToday" .pagesReadToday Codec.int
         |> Codec.buildObject
+
+
+oldUserToUser : OldUser -> User.User
+oldUserToUser oldUser =
+    { username = oldUser.username
+    , id = oldUser.id
+    , realname = oldUser.realname
+    , email = oldUser.email
+    , created = oldUser.created
+    , modified = oldUser.modified
+    , pagesReadToday = 0
+    }
+
+
+userToOldUser : User.User -> OldUser
+userToOldUser user =
+    { username = user.username
+    , id = user.id
+    , realname = user.realname
+    , email = user.email
+    , created = user.created
+    , modified = user.modified
+    }
 
 
 credentialsCodec : Codec Credentials.Credentials
@@ -85,7 +117,7 @@ credentialsCodec =
 userDataCodec : Codec Authentication.UserData
 userDataCodec =
     Codec.object Authentication.UserData
-        |> Codec.field "user" .user userCodec
+        |> Codec.field "user" .user (oldUserCodec |> Codec.map oldUserToUser userToOldUser)
         |> Codec.field "credentials" .credentials credentialsCodec
         |> Codec.buildObject
 

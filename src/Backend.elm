@@ -11,6 +11,7 @@ import List.Extra
 import Random
 import Time
 import Types exposing (..)
+import User
 
 
 type alias Model =
@@ -82,6 +83,9 @@ updateFromFrontend sessionId clientId msg model =
         EncodeBackendModel ->
             ( model, sendToFrontend clientId (GotBackup (Backend.Backup.encodeBackup model)) )
 
+        RestoreBackup backendModel ->
+            ( backendModel, sendToFrontend clientId (SendMessage "... backup restored") )
+
         -- DATA
         SaveDatum username datum ->
             let
@@ -113,8 +117,8 @@ updateFromFrontend sessionId clientId msg model =
             in
             ( { model | dataDict = dataDict }, sendToFrontend clientId (SendMessage message) )
 
-        UpdateDatum username book ->
-            case Dict.get username model.dataDict of
+        UpdateDatum user deltaPagesReadToday book ->
+            case Dict.get user.username model.dataDict of
                 Nothing ->
                     ( model, sendToFrontend clientId (SendMessage "Can't update: no datafile") )
 
@@ -125,9 +129,24 @@ updateFromFrontend sessionId clientId msg model =
                             List.Extra.setIf (\b -> b.id == book.id) book dataFile.data
 
                         newDataDict =
-                            Dict.insert username { dataFile | data = newData } model.dataDict
+                            Dict.insert user.username { dataFile | data = newData } model.dataDict
+
+                        userUpdater : Int -> User.User -> User.User
+                        userUpdater delta user_ =
+                            { user_ | pagesReadToday = user.pagesReadToday + delta } |> Debug.log "USER"
+
+                        newUser =
+                            userUpdater deltaPagesReadToday user |> Debug.log "NEWUSER"
+
+                        newAuthDict =
+                            Authentication.updateUser (userUpdater deltaPagesReadToday) user model.authenticationDict
                     in
-                    ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ String.left 10 book.title ++ " ... ' updated.") )
+                    ( { model | dataDict = newDataDict, authenticationDict = newAuthDict }
+                    , Cmd.batch
+                        [ sendToFrontend clientId (SendMessage <| "Pages read: " ++ (String.fromInt <| user.pagesReadToday + deltaPagesReadToday))
+                        , sendToFrontend clientId (SendUser newUser)
+                        ]
+                    )
 
         DeleteBookFromStore username dataId ->
             ( { model | dataDict = Data.remove username dataId model.dataDict }
