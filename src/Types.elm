@@ -149,7 +149,7 @@ type FrontendMsg
     | JsonRequested JsonRequestType
     | JsonSelected JsonRequestType File
     | JsonLoaded JsonRequestType String
-      --
+      -- Inputs
     | InputTitle String
     | InputSubtitle String
     | InputAuthor String

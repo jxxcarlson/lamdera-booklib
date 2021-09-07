@@ -120,6 +120,25 @@ signedInLhs model =
 
 
 lhsHeader model ratioBooks ratioPages rate =
+    E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
+        [ View.Input.bookFilter model (panelWidth_ -260 model)
+
+        -- , Button.searchByStarred
+        , Button.new
+        , lhControls model ratioBooks ratioPages
+        , rhControls model
+        ]
+
+
+lhControls model ratioBooks ratioPages =
+    E.row [ E.width (E.px 280), E.spacing 24, E.paddingEach { left = 24, right = 0, top = 0, bottom = 0 } ]
+        [ E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioBooks)
+        , View.Utility.showIf (model.appMode == ViewBooksMode)
+            (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
+        ]
+
+
+rhControls model =
     let
         dt =
             DateTime.fromPosix model.currentTime
@@ -133,21 +152,13 @@ lhsHeader model ratioBooks ratioPages rate =
         hm =
             "UTC: " ++ h ++ ":" ++ m
     in
-    E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
-        [ View.Input.bookFilter model (panelWidth_ -260 model)
-        , Button.searchByStarred
-        , Button.new
-        , E.row [ E.width (E.px 200), E.spacing 24, E.paddingEach { left = 24, right = 0, top = 0, bottom = 0 } ]
-            [ E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioBooks)
-            , View.Utility.showIf (model.appMode == ViewBooksMode)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
-            , View.Utility.showIf (model.appMode == ViewBooksMode)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Today: " ++ String.fromInt model.pagesReadToday ++ " pp"))
-            , View.Utility.showIf (model.appMode == ViewBooksMode)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate) ++ " pp/day"))
-            , View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
-            ]
+    E.row [ E.spacing 24, E.width (E.px 200) ]
+        [ View.Utility.showIf (model.appMode == ViewBooksMode) (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Today: " ++ String.fromInt model.pagesReadToday ++ " pp"))
+        , View.Utility.showIf (model.appMode == ViewBooksMode)
+            (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate) ++ " pp/day"))
+
+        --, View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
+        --    (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
         ]
 
 
@@ -370,8 +381,8 @@ signedInHeader model user =
 
 newBookHeader =
     E.row [ E.spacing 12 ]
-        [ Button.starSnippet
-        , Button.save
+        [ -- Button.starSnippet
+          Button.save
         , Button.view
 
         --, Button.delete
@@ -382,23 +393,19 @@ rhsHeader model =
     case model.appMode of
         ViewBookMode ->
             E.row [ E.spacing 12 ]
-                [ Button.starSnippet
-                , case model.currentBook of
+                [ case model.currentBook of
                     Nothing ->
                         E.none
 
                     Just book ->
                         Button.editItem2 book
-                , Button.save
                 , Button.view
-
-                -- , Button.delete
                 ]
 
         ViewBooksMode ->
             E.row [ E.spacing 12 ]
-                [ Button.starSnippet
-                , case model.currentBook of
+                [ -- Button.starSnippet
+                  case model.currentBook of
                     Nothing ->
                         E.none
 
@@ -408,8 +415,8 @@ rhsHeader model =
 
         NewBookMode ->
             E.row [ E.spacing 12 ]
-                [ Button.starSnippet
-                , case model.currentBook of
+                [ -- Button.starSnippet
+                  case model.currentBook of
                     Nothing ->
                         E.none
 
@@ -423,23 +430,16 @@ rhsHeader model =
 
         EditBookMode ->
             E.row [ E.spacing 12 ]
-                [ Button.starSnippet
-                , case model.currentBook of
-                    Nothing ->
-                        E.none
-
-                    Just snippet ->
-                        Button.editItem2 snippet
-                , Button.save
+                [ Button.save
                 , Button.view
+                , Button.setAppModeToViewBook
 
                 --, Button.delete
                 ]
 
         ViewAboutMode ->
             E.row [ E.spacing 12 ]
-                [ Button.starSnippet
-                , case model.currentBook of
+                [ case model.currentBook of
                     Nothing ->
                         E.none
 

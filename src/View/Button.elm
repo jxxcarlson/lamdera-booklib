@@ -18,6 +18,7 @@ module View.Button exposing
     , runTask
     , save
     , searchByStarred
+    , setAppModeToViewBook
     , signIn
     , signOut
     , starSnippet
@@ -138,6 +139,11 @@ delete =
 cancelAbout : Element FrontendMsg
 cancelAbout =
     buttonTemplate [] (SetAppMode ViewBooksMode) "Done"
+
+
+setAppModeToViewBook : Element FrontendMsg
+setAppModeToViewBook =
+    buttonTemplate [] (SetAppMode ViewBookMode) "View"
 
 
 editItem datum =
