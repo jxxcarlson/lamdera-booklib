@@ -16,13 +16,13 @@ admin model =
     let
         -- data = List.sortBy (\item_ -> item_.pagesRead) model.userData |> List.reverse
         data =
-            List.sortBy (\item_ -> item_.creationDate) model.userData |> List.reverse
+            List.sortBy (\item__ -> item__.creationDate) model.userData |> List.reverse
 
         wHeight =
             model.windowHeight
 
         wWidth =
-            700
+            800
     in
     View.Utility.showIf (model.popupStatus == PopupOpen AdminPopup) <|
         E.column
@@ -74,11 +74,16 @@ viewUserData wWidth panelHeight userData =
         )
 
 
+userWidth =
+    160
+
+
 viewUserDatum : Int -> UserInfo -> Element msg
 viewUserDatum wWidth datum =
     E.row [ E.spacing 8, E.width (E.px (wWidth - 60)) ]
-        [ E.el [ E.width (E.px 160) ] (E.text (String.left 17 datum.name))
-        , item datum.creationDate
+        [ E.el [ E.width (E.px userWidth) ] (E.text (String.left 17 datum.name))
+        , item (datum.creationDate |> String.replace "2021." "" |> String.replace "0" "")
+        , item (datum.modificationDate |> String.replace "2021." "" |> String.replace "0" "")
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)
         , item (String.fromInt datum.pages)
@@ -90,8 +95,9 @@ viewUserDatum wWidth datum =
 
 columnHeadings =
     E.row [ E.spacing 8, E.width (E.px 500) ]
-        [ E.el [ E.width (E.px 160), Font.bold ] (E.text "Name")
-        , item2 "Joined"
+        [ E.el [ E.width (E.px userWidth), Font.bold ] (E.text "Name")
+        , item2 "Join"
+        , item2 "Mod"
         , item2 "Books"
         , item2 "P. read"
         , item2 "Pages"
@@ -120,5 +126,13 @@ item str =
     E.el [ E.width (E.px 50) ] (E.el [ E.alignRight ] (E.text <| str))
 
 
+item_ str =
+    E.el [ E.width (E.px 70) ] (E.el [ E.alignRight ] (E.text <| str))
+
+
 item2 str =
     E.el [ E.width (E.px 50), Font.bold ] (E.el [ E.alignRight ] (E.text <| str))
+
+
+item2_ str =
+    E.el [ E.width (E.px 70), Font.bold ] (E.el [ E.alignRight ] (E.text <| str))

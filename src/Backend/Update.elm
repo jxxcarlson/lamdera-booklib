@@ -76,6 +76,7 @@ userSummary model username =
                 , pagesReadToday = dataFile.pagesReadToday
                 , readingRate = dataFile.readingRate
                 , creationDate = dataFile.creationDate |> Util.timeToString
+                , modificationDate = dataFile.modificationDate |> Util.timeToString
                 }
 
 
@@ -111,15 +112,6 @@ userReadingRate username model =
             let
                 r =
                     0.5
-
-                pagesRead1 =
-                    dataFile.pagesRead
-
-                pagesRead =
-                    List.map .pagesRead dataFile.data |> List.sum
-
-                pagesReadToday =
-                    pagesRead - pagesRead1
 
                 rate =
                     currentReadingRate dataFile.pagesReadToday dataFile.readingRate
