@@ -144,7 +144,7 @@ lhsHeader model ratioBooks ratioPages rate =
             , View.Utility.showIf (model.appMode == ViewBooksMode)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Today: " ++ String.fromInt model.pagesReadToday ++ " pp"))
             , View.Utility.showIf (model.appMode == ViewBooksMode)
-                (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate)))
+                (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate) ++ " pp/day"))
             , View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
                 (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
             ]
