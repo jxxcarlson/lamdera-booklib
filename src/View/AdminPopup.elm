@@ -16,7 +16,7 @@ admin model =
     View.Utility.showIf (model.popupStatus == PopupOpen AdminPopup) <|
         E.column
             [ E.width (E.px 500)
-            , E.height (E.px 700)
+            , E.height (E.px 600)
             , Font.size 14
             , Font.color (E.rgb255 0 0 0)
             , Background.color View.Color.transparentBlue
@@ -25,24 +25,34 @@ admin model =
             , E.paddingXY 18 18
             , E.spacing 12
             ]
-            [ header model, viewUserData model.userData ]
+            [ header model, viewUserData 500 model.userData, footer model ]
+
+
+footer : FrontendModel -> Element FrontendMsg
+footer model =
+    E.row [ E.spacing 12 ]
+        [ View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.backupBackendModel
+        , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
+        ]
 
 
 header : FrontendModel -> Element FrontendMsg
 header model =
     E.row [ E.spacing 12 ]
-        [ E.el [ Font.size 18 ] (E.text "Admin")
+        [ E.el [ Font.size 18, Font.bold ] (E.text "Admin")
         ]
 
 
-viewUserData : List UserInfo -> Element msg
-viewUserData userData =
+viewUserData : Int -> List UserInfo -> Element msg
+viewUserData panelHeight userData =
     let
         n =
             List.length userData
     in
     E.column
         [ E.spacing 8
+        , E.height (E.px panelHeight)
+        , E.scrollbarY
         ]
         (E.row [ Font.size 14 ] [ E.text <| "Users: " ++ String.fromInt n ] :: List.map viewUserDatum userData)
 
