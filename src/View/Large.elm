@@ -131,7 +131,7 @@ lhsHeader model ratioBooks ratioPages rate =
 
 
 lhControls model ratioBooks ratioPages =
-    E.row [ E.width (E.px 280), E.spacing 24, E.paddingEach { left = 24, right = 0, top = 0, bottom = 0 } ]
+    E.row [ E.width (E.px 310), E.spacing 24, E.paddingEach { left = 24, right = 0, top = 0, bottom = 0 } ]
         [ E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioBooks)
         , View.Utility.showIf (model.appMode == ViewBooksMode)
             (E.el [ Font.color Color.white, Font.size 14 ] (E.text ratioPages))
