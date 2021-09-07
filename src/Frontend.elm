@@ -271,10 +271,10 @@ update msg model =
                         appMode =
                             case newBookViewState.clicks of
                                 0 ->
-                                    ViewBookMode
+                                    EditBookMode
 
                                 1 ->
-                                    EditBookMode
+                                    ViewBookMode
 
                                 _ ->
                                     ViewBooksMode
