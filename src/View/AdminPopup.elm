@@ -16,7 +16,7 @@ admin model =
     let
         -- data = List.sortBy (\item_ -> item_.pagesRead) model.userData |> List.reverse
         data =
-            List.sortBy (\item__ -> item__.creationDate) model.userData |> List.reverse
+            List.sortBy (\item__ -> item__.modificationDate) model.userData |> List.reverse
 
         wHeight =
             model.windowHeight
