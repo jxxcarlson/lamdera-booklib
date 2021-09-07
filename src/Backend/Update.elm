@@ -71,7 +71,7 @@ userSummary model username =
                 { name = username
                 , books = List.length dataFile.data
                 , pages = List.map .pages dataFile.data |> List.sum
-                , pagesRead = pagesRead
+                , pagesRead = List.map .pagesRead dataFile.data |> List.sum
                 , pagesReadToday = dataFile.pagesReadToday
                 , readingRate = dataFile.readingRate
                 }
