@@ -64,22 +64,16 @@ userSummary model username =
 
         Just dataFile ->
             let
-                pages =
-                    List.map .pages dataFile.data |> List.sum
-
                 pagesRead =
-                    List.map .pagesRead dataFile.data |> List.sum
-
-                readingRate =
-                    dataFile.readingRate
+                    dataFile.pagesRead
             in
             Just
                 { name = username
                 , books = List.length dataFile.data
-                , pages = pages
+                , pages = List.length dataFile.data
                 , pagesRead = pagesRead
                 , pagesReadToday = dataFile.pagesReadToday
-                , readingRate = readingRate
+                , readingRate = dataFile.readingRate
                 }
 
 
