@@ -77,7 +77,7 @@ viewUserData wWidth panelHeight userData =
 viewUserDatum : Int -> UserInfo -> Element msg
 viewUserDatum wWidth datum =
     E.row [ E.spacing 8, E.width (E.px (wWidth - 60)) ]
-        [ E.el [ E.width (E.px 160) ] (E.text datum.name)
+        [ E.el [ E.width (E.px 160) ] (E.text (String.left 17 datum.name))
         , item datum.creationDate
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)
