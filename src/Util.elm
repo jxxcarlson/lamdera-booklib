@@ -2,12 +2,42 @@ module Util exposing
     ( comparePosix
     , ifApply
     , insertInList
+    , isUTCTime
     , liftToMaybe
     , roundTo
+    , stringToInt
     )
 
+import DateTime
 import List.Extra
 import Time
+
+
+stringToInt : String -> Int
+stringToInt str =
+    String.toList str
+        |> List.map (Char.toLower >> Char.toCode >> (\n -> n - 97))
+        |> List.filter (\n -> n >= 0 && n < 26)
+        |> List.indexedMap (\i n -> n * 26 ^ i)
+        |> List.sum
+
+
+isUTCTime : Int -> Int -> Int -> Time.Posix -> Bool
+isUTCTime hours minutes seconds t =
+    let
+        dt =
+            DateTime.fromPosix t
+
+        h =
+            DateTime.getHours dt
+
+        m =
+            DateTime.getMinutes dt
+
+        s =
+            DateTime.getSeconds dt
+    in
+    h == hours && m == minutes && s == seconds
 
 
 liftToMaybe : (a -> b) -> (Maybe a -> Maybe b)

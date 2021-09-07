@@ -23,6 +23,7 @@ import Time
 import Token
 import Types exposing (..)
 import Url exposing (Url)
+import Util
 import View.Large
 import View.Small
 
@@ -117,7 +118,31 @@ update msg model =
             ( { model | url = url }, Cmd.none )
 
         FETick time ->
-            ( { model | currentTime = time }, Cmd.none )
+            let
+                username =
+                    Maybe.map .username model.currentUser |> Maybe.withDefault "nobody"
+
+                m =
+                    modBy 4 (Util.stringToInt username)
+
+                s =
+                    modBy 60 (Util.stringToInt username)
+
+                cmd =
+                    -- If the time is (m + 2) minutes and s seconds after 03:00:00 UTC,
+                    -- then send a message to the backend to get user data.
+                    -- The m and s provide some variation based on username so that
+                    -- the backend does not received too many requests at once.
+                    -- This is no doubt overkill, but it is a fun exercise.
+                    -- Note that the 'pagesReadToday field is set to zero at 03:00:00 UTC
+                    -- and that the new reading rate is computed at this time also.
+                    if Util.isUTCTime 3 (m + 2) s time then
+                        sendToBackend (SendUserData username)
+
+                    else
+                        Cmd.none
+            in
+            ( { model | currentTime = time }, cmd )
 
         GotAtomsphericRandomNumberFE result ->
             case result of

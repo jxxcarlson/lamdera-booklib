@@ -2,7 +2,6 @@ module Backend.Update exposing
     ( allUsersSummary
     , currentReadingRate
     , gotAtomsphericRandomNumber
-    , isUTCTime
     , setupUser
     , userReadingRates
     )
@@ -173,21 +172,3 @@ setupUser model clientId username transitPassword =
                 , sendToFrontend clientId (SendUser user)
                 ]
             )
-
-
-isUTCTime : Int -> Int -> Int -> Time.Posix -> Bool
-isUTCTime hours minutes seconds t =
-    let
-        dt =
-            DateTime.fromPosix t
-
-        h =
-            DateTime.getHours dt
-
-        m =
-            DateTime.getMinutes dt
-
-        s =
-            DateTime.getSeconds dt
-    in
-    h == hours && m == minutes && s == seconds

@@ -12,6 +12,7 @@ import Random
 import Time
 import Types exposing (..)
 import User
+import Util
 
 
 type alias Model =
@@ -61,7 +62,7 @@ update msg model =
         Tick time ->
             let
                 newModel =
-                    if Backend.Update.isUTCTime 3 0 0 time then
+                    if Util.isUTCTime 3 0 0 time then
                         Backend.Update.userReadingRates model
 
                     else
