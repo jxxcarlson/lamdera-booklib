@@ -7,7 +7,7 @@ import Element
 import Evergreen.V33.Authentication
 import Evergreen.V33.Data
 import Evergreen.V33.User
-import File exposing (File)
+import File
 import Http
 import Random
 import Time
@@ -159,6 +159,16 @@ type FrontendMsg
     | AdminRunTask
     | GetAllUserData
     | DownloadBackup
+
+
+type alias BackendModel =
+    { message : String
+    , randomSeed : Random.Seed
+    , randomAtmosphericInt : Maybe Int
+    , currentTime : Time.Posix
+    , dataDict : Evergreen.V33.Data.DataDict
+    , authenticationDict : Evergreen.V33.Authentication.AuthenticationDict
+    }
 
 
 type ToBackend
