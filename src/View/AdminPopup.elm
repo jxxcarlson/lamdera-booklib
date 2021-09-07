@@ -56,15 +56,11 @@ viewUserData panelHeight userData =
         , E.height (E.px panelHeight)
         , E.scrollbarY
         ]
-        (E.row [ Font.size 14 ] [ E.text <| "Users: " ++ String.fromInt n ] :: List.map viewUserDatum userData)
+        (E.row [ Font.size 14 ] [ E.text <| "Users: " ++ String.fromInt n ] :: columnHeadings :: List.map viewUserDatum userData)
 
 
 viewUserDatum : UserInfo -> Element msg
 viewUserDatum datum =
-    let
-        w =
-            40
-    in
     E.row [ E.spacing 8, E.width (E.px 500) ]
         [ E.el [ E.width (E.px 110) ] (E.text datum.name)
         , item (String.fromInt datum.books)
@@ -73,6 +69,18 @@ viewUserDatum datum =
         , item (ratio datum)
         , item (String.fromInt datum.pagesReadToday)
         , item (String.fromFloat <| Util.roundTo 2 datum.readingRate)
+        ]
+
+
+columnHeadings =
+    E.row [ E.spacing 8, E.width (E.px 500) ]
+        [ E.el [ E.width (E.px 110) ] (E.text "Name")
+        , item "Books"
+        , item "P. read"
+        , item "Pages"
+        , item "Ratio"
+        , item "Today"
+        , item "Rate"
         ]
 
 

@@ -70,7 +70,7 @@ userSummary model username =
             Just
                 { name = username
                 , books = List.length dataFile.data
-                , pages = List.length dataFile.data
+                , pages = List.map .pages dataFile.data |> List.sum
                 , pagesRead = pagesRead
                 , pagesReadToday = dataFile.pagesReadToday
                 , readingRate = dataFile.readingRate
