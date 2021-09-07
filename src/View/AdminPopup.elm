@@ -16,11 +16,14 @@ admin model =
     let
         data =
             List.sortBy (\item_ -> item_.pagesRead) model.userData |> List.reverse
+
+        wHeight =
+            model.windowHeight
     in
     View.Utility.showIf (model.popupStatus == PopupOpen AdminPopup) <|
         E.column
             [ E.width (E.px 600)
-            , E.height (E.px 600)
+            , E.height (E.px (wHeight - 160))
             , Font.size 14
             , Font.color (E.rgb255 0 0 0)
             , Background.color View.Color.transparentBlue
@@ -29,7 +32,7 @@ admin model =
             , E.paddingXY 18 18
             , E.spacing 12
             ]
-            [ header model, viewUserData 500 data, footer model ]
+            [ header model, viewUserData (wHeight - 190) data, footer model ]
 
 
 footer : FrontendModel -> Element FrontendMsg
