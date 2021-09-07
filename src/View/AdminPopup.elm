@@ -14,8 +14,9 @@ import View.Utility
 admin : FrontendModel -> Element FrontendMsg
 admin model =
     let
+        -- data = List.sortBy (\item_ -> item_.pagesRead) model.userData |> List.reverse
         data =
-            List.sortBy (\item_ -> item_.pagesRead) model.userData |> List.reverse
+            List.sortBy (\item_ -> item_.creationDate) model.userData |> List.reverse
 
         wHeight =
             model.windowHeight
@@ -62,6 +63,7 @@ viewUserData panelHeight userData =
         [ E.spacing 8
         , E.height (E.px panelHeight)
         , E.scrollbarY
+        , E.width (E.px 550)
         ]
         (E.row [] [ E.el [ Font.size 14, Font.bold ] (E.text <| "Users: "), E.el [ Font.size 14 ] (E.text <| String.fromInt n) ]
             :: columnHeadings
@@ -73,6 +75,7 @@ viewUserDatum : UserInfo -> Element msg
 viewUserDatum datum =
     E.row [ E.spacing 8, E.width (E.px 500) ]
         [ E.el [ E.width (E.px 110) ] (E.text datum.name)
+        , item datum.creationDate
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)
         , item (String.fromInt datum.pages)
@@ -85,6 +88,7 @@ viewUserDatum datum =
 columnHeadings =
     E.row [ E.spacing 8, E.width (E.px 500) ]
         [ E.el [ E.width (E.px 110), Font.bold ] (E.text "Name")
+        , item2 "Joined"
         , item2 "Books"
         , item2 "P. read"
         , item2 "Pages"

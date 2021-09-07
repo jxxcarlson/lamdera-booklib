@@ -195,7 +195,7 @@ type BackendMsg
 
 
 type alias UserInfo =
-    { name : Username, books : Int, pages : Int, pagesRead : Int, pagesReadToday : Int, readingRate : Float }
+    { name : Username, books : Int, pages : Int, pagesRead : Int, pagesReadToday : Int, readingRate : Float, creationDate : String }
 
 
 type ToFrontend

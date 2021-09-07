@@ -18,6 +18,7 @@ import Time
 import Token
 import Types exposing (..)
 import User exposing (User)
+import Util
 
 
 type alias Model =
@@ -74,6 +75,7 @@ userSummary model username =
                 , pagesRead = List.map .pagesRead dataFile.data |> List.sum
                 , pagesReadToday = dataFile.pagesReadToday
                 , readingRate = dataFile.readingRate
+                , creationDate = dataFile.creationDate |> Util.timeToString
                 }
 
 
