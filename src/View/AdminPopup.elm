@@ -13,6 +13,10 @@ import View.Utility
 
 admin : FrontendModel -> Element FrontendMsg
 admin model =
+    let
+        data =
+            List.sortBy (\item_ -> item_.pagesRead) model.userData |> List.reverse
+    in
     View.Utility.showIf (model.popupStatus == PopupOpen AdminPopup) <|
         E.column
             [ E.width (E.px 600)
@@ -25,7 +29,7 @@ admin model =
             , E.paddingXY 18 18
             , E.spacing 12
             ]
-            [ header model, viewUserData 500 (List.sortBy (\item_ -> item_.pagesRead) model.userData), footer model ]
+            [ header model, viewUserData 500 data, footer model ]
 
 
 footer : FrontendModel -> Element FrontendMsg
