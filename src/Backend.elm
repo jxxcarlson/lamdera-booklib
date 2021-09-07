@@ -134,6 +134,7 @@ updateFromFrontend sessionId clientId msg model =
                                 | data = newData
                                 , pagesReadToday = dataFile.pagesReadToday + deltaPagesReadToday
                                 , pagesRead = dataFile.pagesRead + deltaPagesReadToday
+                                , modificationDate = model.currentTime
                             }
 
                         newDataDict =
