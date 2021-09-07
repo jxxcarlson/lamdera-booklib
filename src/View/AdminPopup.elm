@@ -63,7 +63,10 @@ viewUserData panelHeight userData =
         , E.height (E.px panelHeight)
         , E.scrollbarY
         ]
-        (E.row [ Font.size 14 ] [ E.text <| "Users: " ++ String.fromInt n ] :: columnHeadings :: List.map viewUserDatum userData)
+        (E.row [] [ E.el [ Font.size 14, Font.bold ] (E.text <| "Users: "), E.el [ Font.size 14 ] (E.text <| String.fromInt n) ]
+            :: columnHeadings
+            :: List.map viewUserDatum userData
+        )
 
 
 viewUserDatum : UserInfo -> Element msg
@@ -81,13 +84,13 @@ viewUserDatum datum =
 
 columnHeadings =
     E.row [ E.spacing 8, E.width (E.px 500) ]
-        [ E.el [ E.width (E.px 110) ] (E.text "Name")
-        , item "Books"
-        , item "P. read"
-        , item "Pages"
-        , item "Ratio"
-        , item "Today"
-        , item "Rate"
+        [ E.el [ E.width (E.px 110), Font.bold ] (E.text "Name")
+        , item2 "Books"
+        , item2 "P. read"
+        , item2 "Pages"
+        , item2 "Ratio"
+        , item2 "Today"
+        , item2 "Rate"
         ]
 
 
@@ -108,3 +111,7 @@ ratio datum =
 
 item str =
     E.el [ E.width (E.px 50) ] (E.el [ E.alignRight ] (E.text <| str))
+
+
+item2 str =
+    E.el [ E.width (E.px 50), Font.bold ] (E.el [ E.alignRight ] (E.text <| str))
