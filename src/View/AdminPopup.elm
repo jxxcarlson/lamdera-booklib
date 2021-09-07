@@ -15,7 +15,7 @@ admin : FrontendModel -> Element FrontendMsg
 admin model =
     View.Utility.showIf (model.popupStatus == PopupOpen AdminPopup) <|
         E.column
-            [ E.width (E.px 500)
+            [ E.width (E.px 600)
             , E.height (E.px 600)
             , Font.size 14
             , Font.color (E.rgb255 0 0 0)
@@ -32,7 +32,8 @@ footer : FrontendModel -> Element FrontendMsg
 footer model =
     E.row [ E.spacing 12 ]
         [ View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.backupBackendModel
-        , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
+
+        --, View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
         ]
 
 
@@ -40,6 +41,7 @@ header : FrontendModel -> Element FrontendMsg
 header model =
     E.row [ E.spacing 12 ]
         [ E.el [ Font.size 18, Font.bold ] (E.text "Admin")
+        , Button.closePopup
         ]
 
 
@@ -63,7 +65,7 @@ viewUserDatum datum =
         w =
             40
     in
-    E.row [ E.spacing 8, E.width (E.px 450) ]
+    E.row [ E.spacing 8, E.width (E.px 500) ]
         [ E.el [ E.width (E.px 110) ] (E.text datum.name)
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)

@@ -3,6 +3,7 @@ module View.Button exposing
     , adminPopup
     , backupBackendModel
     , cancelAbout
+    , closePopup
     , delete
     , editItem
     , editItem2
@@ -252,3 +253,8 @@ adminPopup model =
             Maybe.map .username model.currentUser == Just Config.administrator
     in
     View.Utility.showIf isVisible <| buttonTemplate [] (ChangePopupStatus nextState) "Admin"
+
+
+closePopup : Element FrontendMsg
+closePopup =
+    buttonTemplate [] (ChangePopupStatus PopupClosed) "Close"
