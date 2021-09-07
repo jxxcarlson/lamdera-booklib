@@ -25,7 +25,7 @@ admin model =
             , E.paddingXY 18 18
             , E.spacing 12
             ]
-            [ header model, viewUserData 500 model.userData, footer model ]
+            [ header model, viewUserData 500 (List.sortBy (\item_ -> item_.pagesRead) model.userData), footer model ]
 
 
 footer : FrontendModel -> Element FrontendMsg
