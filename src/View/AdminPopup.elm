@@ -20,10 +20,13 @@ admin model =
 
         wHeight =
             model.windowHeight
+
+        wWidth =
+            700
     in
     View.Utility.showIf (model.popupStatus == PopupOpen AdminPopup) <|
         E.column
-            [ E.width (E.px 600)
+            [ E.width (E.px wWidth)
             , E.height (E.px (wHeight - 160))
             , Font.size 14
             , Font.color (E.rgb255 0 0 0)
@@ -33,7 +36,7 @@ admin model =
             , E.paddingXY 18 18
             , E.spacing 12
             ]
-            [ header model, viewUserData (wHeight - 190) data, footer model ]
+            [ header model, viewUserData wWidth (wHeight - 190) data, footer model ]
 
 
 footer : FrontendModel -> Element FrontendMsg
@@ -41,7 +44,7 @@ footer model =
     E.row [ E.spacing 12 ]
         [ View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.backupBackendModel
 
-        --, View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
+        -- , View.Utility.showIf (Maybe.map .username model.currentUser == Just "jxxcarlson") Button.restoreBackendBackup
         ]
 
 
@@ -53,8 +56,8 @@ header model =
         ]
 
 
-viewUserData : Int -> List UserInfo -> Element msg
-viewUserData panelHeight userData =
+viewUserData : Int -> Int -> List UserInfo -> Element msg
+viewUserData wWidth panelHeight userData =
     let
         n =
             List.length userData
@@ -63,18 +66,18 @@ viewUserData panelHeight userData =
         [ E.spacing 8
         , E.height (E.px panelHeight)
         , E.scrollbarY
-        , E.width (E.px 550)
+        , E.width (E.px (wWidth - 30))
         ]
         (E.row [] [ E.el [ Font.size 14, Font.bold ] (E.text <| "Users: "), E.el [ Font.size 14 ] (E.text <| String.fromInt n) ]
             :: columnHeadings
-            :: List.map viewUserDatum userData
+            :: List.map (viewUserDatum wWidth) userData
         )
 
 
-viewUserDatum : UserInfo -> Element msg
-viewUserDatum datum =
-    E.row [ E.spacing 8, E.width (E.px 500) ]
-        [ E.el [ E.width (E.px 110) ] (E.text datum.name)
+viewUserDatum : Int -> UserInfo -> Element msg
+viewUserDatum wWidth datum =
+    E.row [ E.spacing 8, E.width (E.px (wWidth - 60)) ]
+        [ E.el [ E.width (E.px 160) ] (E.text datum.name)
         , item datum.creationDate
         , item (String.fromInt datum.books)
         , item (String.fromInt datum.pagesRead)
@@ -87,7 +90,7 @@ viewUserDatum datum =
 
 columnHeadings =
     E.row [ E.spacing 8, E.width (E.px 500) ]
-        [ E.el [ E.width (E.px 110), Font.bold ] (E.text "Name")
+        [ E.el [ E.width (E.px 160), Font.bold ] (E.text "Name")
         , item2 "Joined"
         , item2 "Books"
         , item2 "P. read"
