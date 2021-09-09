@@ -62,7 +62,7 @@ update msg model =
         Tick time ->
             let
                 newModel =
-                    if Util.isUTCTime 4 0 0 time then
+                    if Util.isUTCTime 5 0 0 time then
                         Backend.Update.userReadingRates model
 
                     else

@@ -136,7 +136,7 @@ update msg model =
                     -- This is no doubt overkill, but it is a fun exercise.
                     -- Note that the 'pagesReadToday field is set to zero at 03:00:00 UTC
                     -- and that the new reading rate is computed at this time also.
-                    if Util.isUTCTime 4 (m + 2) s time then
+                    if Util.isUTCTime 5 (m + 2) s time then
                         sendToBackend (SendUserData username)
 
                     else
