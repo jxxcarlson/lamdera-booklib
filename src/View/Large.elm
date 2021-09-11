@@ -139,26 +139,10 @@ lhControls model ratioBooks ratioPages =
 
 
 rhControls model =
-    let
-        dt =
-            DateTime.fromPosix model.currentTime
-
-        h =
-            DateTime.getHours dt |> String.fromInt |> String.padLeft 2 '0'
-
-        m =
-            DateTime.getMinutes dt |> String.fromInt |> String.padLeft 2 '0'
-
-        hm =
-            "UTC: " ++ h ++ ":" ++ m
-    in
     E.row [ E.spacing 24, E.width (E.px 200) ]
         [ View.Utility.showIf (model.appMode == ViewBooksMode) (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Today: " ++ String.fromInt model.pagesReadToday ++ " pp"))
         , View.Utility.showIf (model.appMode == ViewBooksMode)
             (E.el [ Font.color Color.white, Font.size 14 ] (E.text <| "Rate: " ++ String.fromFloat (Util.roundTo 1 model.readingRate) ++ " pp/day"))
-
-        --, View.Utility.showIf (model.appMode == ViewBooksMode && userIsAdmin model)
-        --    (E.el [ Font.color Color.white, Font.size 14 ] (E.text hm))
         ]
 
 
