@@ -41,7 +41,6 @@ app =
         , updateFromBackend = updateFromBackend
         , subscriptions = subscriptions
         , view = view
-        , xmode = XA
         }
 
 
@@ -60,6 +59,7 @@ init url key =
       , currentTime = Time.millisToPosix 0
       , randomSeed = Random.initialSeed 1234
       , appMode = ViewBooksMode
+      , xmode = XA
 
       -- ADMIN
       , userData = []
