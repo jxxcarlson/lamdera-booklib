@@ -41,6 +41,7 @@ app =
         , updateFromBackend = updateFromBackend
         , subscriptions = subscriptions
         , view = view
+        , xmode = XA
         }
 
 
