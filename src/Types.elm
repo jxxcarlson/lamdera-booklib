@@ -30,6 +30,7 @@ type alias FrontendModel =
 
     -- ADMIN
     , userData : List UserInfo
+    , xmode : XMode
 
     -- USER
     , currentUser : Maybe User
@@ -222,3 +223,6 @@ type ToFrontend
 type ExtendedInteger
     = Finite Int
     | Infinity
+
+
+type XMode = XA | XB
