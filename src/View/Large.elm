@@ -64,7 +64,7 @@ lhs model =
 signInScreen model =
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
-            [ E.image [ E.width (appWidth_ 0 model), E.height (E.px <| appHeight model - 155) ] { src = "https://www.hastac.org/sites/default/files/upload/images/post/books.jpg", description = "Library" }
+            [ E.image [ E.width (appWidth_ 0 model), E.height (E.px <| appHeight model - 155) ] { src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHFraskRrat7IrYy_nIkXwZRHAgHEiGDR-sQ&usqp=CAU", description = "Library" }
             ]
         ]
 
