@@ -263,24 +263,12 @@ update msg model =
                             model.bookViewState
 
                         newBookViewState =
-                            if oldBookViewState.bookId == Just book.id then
-                                { oldBookViewState | clicks = modBy 3 (1 + model.bookViewState.clicks) }
+                            
+                                { oldBookViewState | bookId = Just book.id, clicks = oldBookViewState.clicks + 1 |> modBy 2 } |> Debug.log "BV STATE"
 
-                            else
-                                { oldBookViewState | bookId = Just book.id, clicks = 0 }
-
-                        appMode =
-                            case newBookViewState.clicks of
-                                0 ->
-                                    EditBookMode
-
-                                1 ->
-                                    ViewBookMode
-
-                                _ ->
-                                    ViewBooksMode
+                        appMode = if model.appMode == ViewBooksMode then ViewBookMode else ViewBooksMode
+                            
                     in
-                    if appMode == EditBookMode then
                         ( { model
                             | currentBook = Just book
                             , message = "Editing " ++ book.title
@@ -296,8 +284,6 @@ update msg model =
                         , Cmd.none
                         )
 
-                    else
-                        ( { model | currentBook = Just book, appMode = appMode, bookViewState = newBookViewState }, Cmd.none )
 
         Fetch ->
             case model.currentUser of
