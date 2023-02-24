@@ -264,7 +264,7 @@ update msg model =
 
                         newBookViewState =
                             
-                                { oldBookViewState | bookId = Just book.id, clicks = oldBookViewState.clicks + 1 |> modBy 2 } |> Debug.log "BV STATE"
+                                { oldBookViewState | bookId = Just book.id, clicks = oldBookViewState.clicks + 1 |> modBy 2 } 
 
                         appMode = if model.appMode == ViewBooksMode then ViewBookMode else ViewBooksMode
                             
