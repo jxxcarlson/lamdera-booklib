@@ -260,6 +260,7 @@ bookEditor width_ height_ model book =
                 , E.row style [ label "Category", View.Input.category model w ]
                 , E.row style [ label "Pages read", View.Input.pagesRead model w ]
                 , E.row style [ label "Pages", View.Input.pages model w ]
+                , E.column style [View.Input.multiLineTemplate [] (E.px (width_ - 25)) (E.px (height_ - 350))  "Notes" InputNotes model.inputNotes]
                 ]
             ]
         ]
@@ -284,6 +285,7 @@ viewBook model book =
                     , E.text ("Category: " ++ book.category)
                     , E.text ("Pages read: " ++ String.fromInt book.pagesRead)
                     , E.text ("Pages: " ++ String.fromInt book.pages)
+                    -- , E.text book.notes
                     ]
                 , E.column
                     [ E.width (panelWidth 0 model)

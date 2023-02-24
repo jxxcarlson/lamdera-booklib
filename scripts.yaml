@@ -3,3 +3,5 @@ scripts:
   update-vendor: cp -r ../elm-search/src vendor/search/
 
   cloc: cloc --bycd-file --exclude-dir=Evergreen src/
+
+  live: lamdera live --port=8010

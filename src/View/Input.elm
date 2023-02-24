@@ -4,6 +4,7 @@ module View.Input exposing
     , category
     , newBook
     , pages
+    , multiLineTemplate
     , pagesRead
     , passwordInput
     , subtitle
@@ -95,7 +96,6 @@ newBook width_ height_ model =
     E.text "New Book"
 
 
-
 --in
 --multiLineTemplate attrs (E.px width_) (E.px height_) "Snippet" InputSnippet text_
 
@@ -111,7 +111,7 @@ viewNotes height_ width_ book =
 
 
 
---multiLineTemplate attrList width_ height_ default msg text =
+-- multiLineTemplate attrList width_ height_ default msg text =
 --    Input.multiline ([ E.moveUp 5, Font.size 16, E.height height_, E.width width_, E.scrollbarY ] ++ attrList)
 --        { onChange = msg
 --        , text = text

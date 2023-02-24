@@ -364,6 +364,7 @@ update msg model =
                                         , category = model.inputCategory
                                         , creationDate = model.currentTime
                                         , modificationDate = model.currentTime
+                                        , notes = model.inputNotes
                                     }
 
                                 newBooks =
@@ -414,6 +415,7 @@ update msg model =
                                                 , pages = pages
                                                 , pagesReadToday = pagesRead - book.pagesRead + book.pagesReadToday
                                                 , modificationDate = model.currentTime
+                                                , notes = model.inputNotes
                                             }
 
                                         newBooks =
@@ -454,6 +456,7 @@ update msg model =
                 , inputCategory = book.category
                 , inputPagesRead = String.fromInt book.pagesRead
                 , inputPages = String.fromInt book.pages
+                , inputNotes = book.notes
                 , appMode = EditBookMode
               }
             , Cmd.none
